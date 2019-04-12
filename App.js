@@ -1,21 +1,41 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react'
+import { Font, SplashScreen } from 'expo'
+import getTheme from './native-base-theme/components'
+import eulimsTheme from './native-base-theme/variables/eulims'
+import Store from './src/store'
+import Boot from './src/boot'
+import { StyleProvider } from 'native-base'
 
 export default class App extends React.Component {
-  render() {
+  constructor (props) {
+    super(props)
+    SplashScreen.preventAutoHide()
+    this.state = {
+      bootupComplete: false
+    }
+  }
+
+  async componentDidMount () {
+    /**
+     * Load initial assets.
+     */
+
+    // Fonts
+    await Font.loadAsync({
+      'Segoe UI': require('./assets/fonts/SegoeUI.ttf'),
+      'Segoe UI Bold': require('./assets/fonts/SegoeUIBold.ttf')
+    })
+
+    this.setState({ bootupComplete: true })
+  }
+
+  render () {
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-      </View>
-    );
+      <Store.Container>
+        <StyleProvider style={getTheme(eulimsTheme)}>
+          <Boot bootupComplete={this.state.bootupComplete} />
+        </StyleProvider>
+      </Store.Container>
+    )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
