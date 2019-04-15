@@ -1,5 +1,7 @@
 import React from 'react'
 import { Font, SplashScreen } from 'expo'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { setCustomText, setCustomTextInput } from 'react-native-global-props'
 import getTheme from './native-base-theme/components'
 import eulimsTheme from './native-base-theme/variables/eulims'
 import Store from './src/store'
@@ -11,7 +13,7 @@ export default class App extends React.Component {
     super(props)
     SplashScreen.preventAutoHide()
     this.state = {
-      bootupComplete: false
+      assetsLoaded: false
     }
   }
 
@@ -22,20 +24,33 @@ export default class App extends React.Component {
 
     // Fonts
     await Font.loadAsync({
-      'Segoe UI': require('./assets/fonts/SegoeUI.ttf'),
-      'Segoe UI Bold': require('./assets/fonts/SegoeUIBold.ttf')
+      'Poppins': require('./assets/fonts/PoppinsLatin-Regular.ttf'),
+      'Poppins Bold': require('./assets/fonts/PoppinsLatin-Bold.ttf'),
+      ...MaterialCommunityIcons.font
     })
 
-    this.setState({ bootupComplete: true })
+    // Global Component Styles
+    setCustomText({
+      style: {
+        fontFamily: 'Poppins'
+      }
+    })
+
+    this.setState({ assetsLoaded: true })
   }
 
   render () {
-    return (
-      <Store.Container>
-        <StyleProvider style={getTheme(eulimsTheme)}>
-          <Boot bootupComplete={this.state.bootupComplete} />
-        </StyleProvider>
-      </Store.Container>
-    )
+    if (this.state.assetsLoaded) {
+      SplashScreen.hide()
+      return (
+        <Store.Container>
+          <StyleProvider style={getTheme(eulimsTheme)}>
+            <Boot />
+          </StyleProvider>
+        </Store.Container>
+      )
+    }
+
+    return null
   }
 }

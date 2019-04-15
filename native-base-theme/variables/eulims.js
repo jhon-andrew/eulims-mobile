@@ -34,7 +34,7 @@ export default {
   badgePadding: 0,
 
   // Button
-  btnFontFamily: "Segoe UI Bold",
+  btnFontFamily: "Poppins Bold",
   btnDisabledBg: "#b5b5b5",
   buttonPadding: 6,
   get btnPrimaryBg() {
@@ -122,7 +122,7 @@ export default {
 
   // Font
   DefaultFontSize: 16,
-  fontFamily: "Segoe UI",
+  fontFamily: "Poppins",
   fontSizeBase: 15,
   get fontSizeH1() {
     return this.fontSizeBase * 1.8;
@@ -248,7 +248,7 @@ export default {
   },
 
   // Title
-  titleFontfamily: "Segoe UI Bold",
+  titleFontfamily: "Poppins Bold",
   titleFontSize: 19,
   subTitleFontSize: 14,
   subtitleColor: "#FFF",

@@ -1,33 +1,18 @@
 import React from 'react'
 import Store from './store'
-import { SplashScreen } from 'expo'
-import { Container, Header, Body, Title, Content, Card, CardItem, Text } from 'native-base'
+import { AsyncStorage } from 'react-native'
+import Login from './screens/Login'
 
 class Boot extends React.Component {
+  async componentDidMount () {
+    let prefServer = await AsyncStorage.getItem('prefServer')
+    this.props.store.set('prefServer')(prefServer)
+  }
+
   render () {
-    const { store, bootupComplete } = this.props
+    const { store } = this.props
 
-    if (bootupComplete) SplashScreen.hide()
-    if (!bootupComplete) return null
-
-    return (
-      <Container>
-        <Header>
-          <Body>
-            <Title>EULIMS Mobile</Title>
-          </Body>
-        </Header>
-        <Content padder>
-          <Card>
-            <CardItem>
-              <Body>
-                <Text>Welcome to EULIMS Mobile App version 0.1 Beta</Text>
-              </Body>
-            </CardItem>
-          </Card>
-        </Content>
-      </Container>
-    )
+    if (!store.get('user')) return (<Login />)
   }
 }
 
