@@ -1,8 +1,9 @@
 import React from 'react'
 import Store from '../store'
-import { StyleSheet, Image, Dimensions } from 'react-native'
+import { StyleSheet, Image, Dimensions, TouchableWithoutFeedback } from 'react-native'
 import { LinearGradient } from 'expo'
-import { Container, Grid, Row, Card, CardItem, Text, View, Body, H2, Form, Item, Input, Icon, Button, Content } from 'native-base'
+import { Container, Grid, Row, Text, View, H2, Form, Item, Input, Icon, Button, Content } from 'native-base'
+import ServerSelection from './ServerSelection'
 
 const styles = StyleSheet.create({
   verticalCenter: {
@@ -38,7 +39,25 @@ const styles = StyleSheet.create({
 })
 
 class Login extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      isOpen: false,
+      prefServer: null
+    }
+
+    this.toggleServerSelection = this.toggleServerSelection.bind(this)
+  }
+
+  toggleServerSelection () {
+    this.setState({
+      isOpen: !this.state.isOpen
+    })
+  }
+
   render () {
+    const { store } = this.props
+
     return (
       <Container>
         <LinearGradient colors={['#b1d1e4', '#3c8dbc']} start={[0.0, 0.5]} end={[0.5, 1.0]} style={{ flex: 1 }}>
@@ -60,10 +79,18 @@ class Login extends React.Component {
                       <Input placeholder="Password" secureTextEntry={true} />
                       <Icon type="MaterialCommunityIcons" name="textbox-password" />
                     </Item>
-                    <Item rounded style={styles.formItem}>
-                      <Input placeholder="Server" autoCapitalize="none" />
-                      <Icon type="MaterialCommunityIcons" name="server" />
-                    </Item>
+
+                    <TouchableWithoutFeedback onPress={() => this.toggleServerSelection()}>
+                      <View pointerEvents="box-only" style={{padding: 0}}>
+                        <Item rounded style={styles.formItem}>
+                          <Input placeholder="Server" autoCapitalize="none" editable={false} value={store.get('prefServer')} />
+                          <Icon type="MaterialCommunityIcons" name="server" />
+                        </Item>
+
+                        <ServerSelection toggle={this.toggleServerSelection} isOpen={this.state.isOpen} />
+                      </View>
+                    </TouchableWithoutFeedback>
+
                   </Form>
 
                   <Button block rounded style={{ marginVertical: 4 }}>

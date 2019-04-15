@@ -1,0 +1,16 @@
+{
+  "servers": [
+    {
+      "name": "Local",
+      "address": "localhost:8080"
+    },
+    {
+      "name": "Development",
+      "address": "webapp:8080"
+    },
+    {
+      "name": "Production",
+      "address": "eulimsportal.onelab.ph"
+    }
+  ]
+}
