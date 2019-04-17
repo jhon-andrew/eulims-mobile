@@ -12,23 +12,32 @@ export default class API {
   async getPrefServer () {
     this.server = this.server || await AsyncStorage.getItem('prefServer')
     this.axios = axios.create({
-      baseURL: `${this.protocol}//${this.server}`
+      baseURL: `${this.protocol}//${this.server}`,
+      responseType: 'json'
     })
+
+    return this.server
   }
 
   get (endpoint, params = {}) {
+    console.log('GET', endpoint, params)
     return this.axios.get(endpoint, { params })
-      .then(resp => resp)
-      .catch(err => null)
+      .then(resp => resp.data)
+      .catch(err => undefined)
   }
 
   post (endpoint, data) {
+    console.log('POST', endpoint, data)
     return this.axios.post(endpoint, data)
-      .then(resp => resp)
-      .catch(err => null)
+      .then(resp => resp.data)
+      .catch(err => undefined)
   }
 }
 
 // Check Server Status
+export function CheckServer (server) {
+  let api = new API(server)
+  return api.get('/server-status')
+}
 // Check User
 // Login Function

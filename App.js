@@ -31,11 +31,8 @@ export default class App extends React.Component {
     })
 
     // Global Component Styles
-    setCustomText({
-      style: {
-        fontFamily: 'Poppins'
-      }
-    })
+    setCustomText({ style: { fontFamily: 'Poppins' } })
+    setCustomTextInput({ style: { fontFamily: 'Poppins' } })
 
     this.setState({ assetsLoaded: true })
   }

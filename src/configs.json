@@ -11,6 +11,10 @@
     {
       "name": "Production",
       "address": "eulimsportal.onelab.ph"
+    },
+    {
+      "name": "API Simulation",
+      "address": "192.168.1.245:3000"
     }
   ]
 }

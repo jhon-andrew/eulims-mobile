@@ -3,6 +3,7 @@ import Store from '../store'
 import { Modal } from 'react-native'
 import { Container, Header, Left, Button, Icon, Body, Title, Content, List, ListItem, Text, Right, Spinner, Input, Form, Item, Label, View, Footer } from 'native-base'
 import theme from '../../native-base-theme/variables/eulims'
+import { CheckServer } from '../api'
 
 const { servers } = require('../configs.json')
 
@@ -11,8 +12,18 @@ class ServerSelection extends React.Component {
     super(props)
     this.state = {
       prefServer: null,
-      servers: servers.map((server) => ({...server, status: 'offline'}))
+      servers: servers.map((server) => ({...server, status: 'checking'}))
     }
+  }
+
+  componentDidMount () {
+    // Check status of predefined servers
+    let servers = this.state.servers
+    servers.forEach(async (server, index) => {
+      let Server = await CheckServer(server.address)
+      servers[index].status = (Server && Server.status === 'online') ? 'online' : 'offline'
+      this.setState({ servers })
+    })
   }
 
   savePrefServer () {
@@ -21,7 +32,7 @@ class ServerSelection extends React.Component {
   }
 
   // Temporary
-  checkServerStatus (serverStatus) {
+  serverStatus (serverStatus) {
     switch(serverStatus) {
       case 'checking':
         return (<Spinner size="small" style={{ height: 29 }} color={theme.brandDark} />)
@@ -74,7 +85,7 @@ class ServerSelection extends React.Component {
                       <Text note>{server.address}</Text>
                     </Body>
                     <Right>
-                      {this.checkServerStatus(server.status)}
+                      {this.serverStatus(server.status)}
                     </Right>
                   </ListItem>
                 ))
