@@ -11,7 +11,7 @@ class ServerSelection extends React.Component {
     super(props)
     this.state = {
       prefServer: null,
-      servers
+      servers: servers.map((server) => ({...server, status: 'offline'}))
     }
   }
 
@@ -21,8 +21,7 @@ class ServerSelection extends React.Component {
   }
 
   // Temporary
-  checkServerStatus () {
-    let serverStatus = 'online'
+  checkServerStatus (serverStatus) {
     switch(serverStatus) {
       case 'checking':
         return (<Spinner size="small" style={{ height: 29 }} color={theme.brandDark} />)
@@ -75,7 +74,7 @@ class ServerSelection extends React.Component {
                       <Text note>{server.address}</Text>
                     </Body>
                     <Right>
-                      {this.checkServerStatus(index)}
+                      {this.checkServerStatus(server.status)}
                     </Right>
                   </ListItem>
                 ))

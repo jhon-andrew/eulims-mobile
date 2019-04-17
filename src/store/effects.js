@@ -1,11 +1,12 @@
 import { AsyncStorage } from 'react-native'
 
 const effects = store => {
-  store
-    .on('prefServer')
-    .subscribe(async (prefServer) => {
-      await AsyncStorage.setItem('prefServer', prefServer)
+  // Store to AsyncStorage
+  ['prefServer', 'token', 'user'].forEach(key => {
+    store.on(key).subscribe(async (val) => {
+      await AsyncStorage.setItem(key, ((typeof val) === 'object') ? JSON.stringify(val) : val)
     })
+  })
 
   return store
 }

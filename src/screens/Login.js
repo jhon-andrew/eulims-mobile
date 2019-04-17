@@ -1,8 +1,8 @@
 import React from 'react'
 import Store from '../store'
 import { StyleSheet, Image, Dimensions, TouchableWithoutFeedback } from 'react-native'
-import { LinearGradient } from 'expo'
-import { Container, Grid, Row, Text, View, H2, Form, Item, Input, Icon, Button, Content } from 'native-base'
+import { LinearGradient, SplashScreen } from 'expo'
+import { Container, Grid, Row, Text, View, H2, Form, Item, Input, Icon, Button, Content, Toast } from 'native-base'
 import ServerSelection from './ServerSelection'
 
 const styles = StyleSheet.create({
@@ -47,6 +47,12 @@ class Login extends React.Component {
     }
 
     this.toggleServerSelection = this.toggleServerSelection.bind(this)
+  }
+
+  componentDidMount () {
+    let { getParam } = this.props.navigation
+    SplashScreen.hide()
+    if (getParam('message')) Toast.show({ text: getParam('message') })
   }
 
   toggleServerSelection () {
