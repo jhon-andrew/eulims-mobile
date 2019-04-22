@@ -2,7 +2,7 @@ import React from 'react'
 import Store from './store'
 import { AppLoading } from 'expo'
 import { AsyncStorage } from 'react-native'
-import { CheckServer, GetUser } from './api'
+import { CheckServer, CheckUser } from './api'
 
 class Boot extends React.Component {
   constructor (props) {
@@ -12,7 +12,7 @@ class Boot extends React.Component {
   }
 
   async checkAuth () {
-    await AsyncStorage.clear() // TEMPORARY: Refresh AsyncStorage on every build
+    // await AsyncStorage.clear() // TEMPORARY: Refresh AsyncStorage on every build
 
     let { navigation, store } = this.props
     let prefServer = await AsyncStorage.getItem('prefServer')
@@ -25,16 +25,15 @@ class Boot extends React.Component {
     } else store.set('servers')(JSON.parse(servers))
 
     if (!prefServer || !token) return navigation.navigate('login')
+    store.set('prefServer')(prefServer)
 
     let server = await CheckServer(prefServer)
-    console.log('server', server)
     if (server && server.status === 'online') {
-      let user = await GetUser()
-      console.log('user', user)
+      let user = await CheckUser(token)
       if (user && user.token) {
         store.set('token')(user.token)
         store.set('user')(user.user)
-        // return navigate('mainApp')
+        return navigation.navigate('sampleTagging')
       } else return navigation.navigate('login', { message: user.message })
     } else return navigation.navigate('login', { message: 'Server is offline.' })
   }

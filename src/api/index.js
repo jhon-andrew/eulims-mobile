@@ -44,9 +44,9 @@ export function CheckServer (server) {
 }
 
 // Check User
-export function CheckUser () {
+export function CheckUser (token) {
   let api = new API()
-  return api.get('/user')
+  return api.get('/user', { token })
 }
 
 // Login Function

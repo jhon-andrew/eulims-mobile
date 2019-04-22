@@ -54,7 +54,11 @@ class LoginScreen extends React.Component {
   componentDidMount () {
     let { getParam } = this.props.navigation
     SplashScreen.hide()
-    if (getParam('message')) Toast.show({ text: getParam('message') })
+    if (getParam('message')) Toast.show({
+      text: getParam('message'),
+      buttonText: 'Okay',
+      duration: 3000
+    })
     this.props.store.on('prefServer').subscribe(prefServer => this.setState({ prefServer }))
   }
 
@@ -76,7 +80,7 @@ class LoginScreen extends React.Component {
     if (login && login.token) {
       store.set('token')(login.token)
       store.set('user')(login.user)
-      // return navigation.navigate('sampleTagging')
+      return navigation.navigate('sampleTagging')
       Toast.show({
         text: `Welcome ${login.user.firstName}!`,
         buttonText: 'Okay',

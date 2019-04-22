@@ -61,7 +61,7 @@ app.use((req, res, next) => {
       error: true,
       message: 'Please login to continue.'
     })
-  }
+  } else next()
 })
 
 // Get user data

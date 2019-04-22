@@ -3,11 +3,15 @@ import { createSwitchNavigator, createStackNavigator, createDrawerNavigator, cre
 import Boot from './boot'
 import Login from './screens/Login'
 import ServerSelection from './screens/ServerSelection'
+import DrawerContent from './screens/SampleTagging/DrawerContent'
+import RecentScans from './screens/SampleTagging/RecentScans'
 
 let rootNav = createSwitchNavigator(
   {
+    // Boot Configuration
     boot: Boot,
-    login: createStackNavigator(
+    // Login & Server Selection Modules
+    auth: createStackNavigator(
       {
         login: Login,
         serverSelection: ServerSelection
@@ -17,7 +21,18 @@ let rootNav = createSwitchNavigator(
           header: null
         }
       }
-    )
+    ),
+    // Sample Tagging Module
+    sampleTagging: createDrawerNavigator({
+      recentScans: {
+        screen: RecentScans,
+        navigationOptions: () => ({
+          title: 'Recent Scans'
+        })
+      }
+    }, {
+      contentComponent: DrawerContent
+    })
   },
   {
     initialRouteName: 'boot',
