@@ -7,15 +7,22 @@ import { CheckServer, GetUser } from './api'
 class Boot extends React.Component {
   constructor (props) {
     super(props)
+    this.checkAuth = this.checkAuth.bind(this)
     this.checkAuth()
   }
 
   async checkAuth () {
-    await AsyncStorage.clear()
+    await AsyncStorage.clear() // TEMPORARY: Refresh AsyncStorage on every build
 
     let { navigation, store } = this.props
     let prefServer = await AsyncStorage.getItem('prefServer')
     let token = await AsyncStorage.getItem('token')
+    let servers = await AsyncStorage.getItem('servers')
+
+    if (!servers) {
+      let Servers = require('./configs.json').servers
+      store.set('servers')(Servers)
+    } else store.set('servers')(JSON.parse(servers))
 
     if (!prefServer || !token) return navigation.navigate('login')
 

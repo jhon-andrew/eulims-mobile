@@ -21,14 +21,16 @@ export default class API {
     return this.server
   }
 
-  get (endpoint, params = {}) {
+  async get (endpoint, params = {}) {
+    if (!this.server) await this.getPrefServer()
     console.log('GET', this.server, endpoint, params)
     return this.axios.get(endpoint, { params })
       .then(resp => resp.data)
       .catch(err => undefined)
   }
 
-  post (endpoint, data) {
+  async post (endpoint, data) {
+    if (!this.server) await this.getPrefServer()
     console.log('POST', this.server, endpoint, data)
     return this.axios.post(endpoint, data)
       .then(resp => resp.data)
@@ -41,19 +43,22 @@ export function CheckServer (server) {
   return new API(server).get('/server-status')
 }
 
-// Single API instance for every request.
-let api = new API()
-
 // Check User
 export function CheckUser () {
+  let api = new API()
   return api.get('/user')
 }
 
 // Login Function
 export function Login (email, password) {
+  let api = new API()
   return api.post('/login', { email, password })
     .then(resp => {
-      if (!resp) Toast.show({ text: 'Connection error.' })
+      if (!resp) Toast.show({
+        text: 'Connection error.',
+        buttonText: 'Okay',
+        duration: 3000
+      })
       return resp
     })
-} 
+}

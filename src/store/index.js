@@ -2,9 +2,10 @@ import { createConnectedStore } from 'undux'
 import effects from './effects'
 
 const initialState = {
-  prefServer: null,
-  token: null,
-  user: null
+  prefServer: undefined,
+  token: undefined,
+  user: undefined,
+  servers: undefined
 }
 
 export default createConnectedStore(initialState, effects)

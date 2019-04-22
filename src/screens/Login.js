@@ -2,7 +2,7 @@ import React from 'react'
 import Store from '../store'
 import { StyleSheet, Image, Dimensions, TouchableWithoutFeedback } from 'react-native'
 import { LinearGradient, SplashScreen } from 'expo'
-import { Container, Grid, Row, Text, View, H2, Form, Item, Input, Icon, Button, Content, Toast } from 'native-base'
+import { Container, Grid, Row, Text, View, H2, Form, Item, Input, Icon, Button, Content, Toast, Spinner } from 'native-base'
 import ServerSelection from './ServerSelection'
 import { Login } from '../api'
 
@@ -49,30 +49,25 @@ class LoginScreen extends React.Component {
       password: undefined,
       loggingIn: false
     }
-
-    this.toggleServerSelection = this.toggleServerSelection.bind(this)
   }
 
   componentDidMount () {
     let { getParam } = this.props.navigation
     SplashScreen.hide()
     if (getParam('message')) Toast.show({ text: getParam('message') })
-  }
-
-  toggleServerSelection () {
-    this.setState({
-      isOpen: !this.state.isOpen
-    })
+    this.props.store.on('prefServer').subscribe(prefServer => this.setState({ prefServer }))
   }
 
   async login () {
     let { email, password, prefServer } = this.state
 
-    if (!email || !password || !prefServer) return this.setState({
+    this.setState({
       emailError: !this.state.email,
       passwordError: !this.state.password,
       prefServerError: !this.state.prefServer
     })
+
+    if (!email || !password || !prefServer) return false
 
     this.setState({ loggingIn: true })
     let login = await Login(this.state.email, this.state.password)
@@ -82,16 +77,24 @@ class LoginScreen extends React.Component {
       store.set('token')(login.token)
       store.set('user')(login.user)
       // return navigation.navigate('sampleTagging')
-      Toast.show({ text: `Welcome ${login.user.firstName}!` })
+      Toast.show({
+        text: `Welcome ${login.user.firstName}!`,
+        buttonText: 'Okay',
+        duration: 3000
+      })
     } else if (login && login.error) {
-      Toast.show({ text: login.message })
+      Toast.show({
+        text: login.message,
+        buttonText: 'Okay',
+        duration: 3000
+      })
     }
 
     this.setState({ loggingIn: false   })
   }
 
   render () {
-    const { store } = this.props
+    const { store, navigation } = this.props
 
     return (
       <Container>
@@ -115,21 +118,19 @@ class LoginScreen extends React.Component {
                       <Icon type="MaterialCommunityIcons" name="textbox-password" />
                     </Item>
 
-                    <TouchableWithoutFeedback onPress={() => this.toggleServerSelection()}>
+                    <TouchableWithoutFeedback onPress={() => navigation.navigate('serverSelection')}>
                       <View pointerEvents="box-only" style={{padding: 0}}>
                         <Item rounded style={styles.formItem} error={this.state.prefServerError}>
                           <Input placeholder="Server" autoCapitalize="none" editable={false} value={store.get('prefServer')} onChangeText={prefServer => this.setState({ prefServer })} />
                           <Icon type="MaterialCommunityIcons" name="server" />
                         </Item>
-
-                        <ServerSelection toggle={this.toggleServerSelection} isOpen={this.state.isOpen} />
                       </View>
                     </TouchableWithoutFeedback>
 
                   </Form>
 
-                  <Button block rounded style={{ marginVertical: 4 }} onPress={() => this.login()}>
-                    <Text>Login</Text>
+                  <Button block rounded style={{ marginVertical: 4 }} onPress={() => this.login()} disabled={this.state.loggingIn}>
+                    { this.state.loggingIn ? (<Spinner color="#ffffff" />) : (<Text>Login</Text>) }
                   </Button>
 
                   <Text style={styles.footer}>EULIMS Mobile v0.1 Beta</Text>
