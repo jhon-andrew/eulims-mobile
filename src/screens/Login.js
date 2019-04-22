@@ -4,6 +4,7 @@ import { StyleSheet, Image, Dimensions, TouchableWithoutFeedback } from 'react-n
 import { LinearGradient, SplashScreen } from 'expo'
 import { Container, Grid, Row, Text, View, H2, Form, Item, Input, Icon, Button, Content, Toast } from 'native-base'
 import ServerSelection from './ServerSelection'
+import { Login } from '../api'
 
 const styles = StyleSheet.create({
   verticalCenter: {
@@ -38,12 +39,15 @@ const styles = StyleSheet.create({
   }
 })
 
-class Login extends React.Component {
+class LoginScreen extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
       isOpen: false,
-      prefServer: null
+      prefServer: undefined,
+      email: undefined,
+      password: undefined,
+      loggingIn: false
     }
 
     this.toggleServerSelection = this.toggleServerSelection.bind(this)
@@ -59,6 +63,31 @@ class Login extends React.Component {
     this.setState({
       isOpen: !this.state.isOpen
     })
+  }
+
+  async login () {
+    let { email, password, prefServer } = this.state
+
+    if (!email || !password || !prefServer) return this.setState({
+      emailError: !this.state.email,
+      passwordError: !this.state.password,
+      prefServerError: !this.state.prefServer
+    })
+
+    this.setState({ loggingIn: true })
+    let login = await Login(this.state.email, this.state.password)
+    const { store, navigation } = this.props
+
+    if (login && login.token) {
+      store.set('token')(login.token)
+      store.set('user')(login.user)
+      // return navigation.navigate('sampleTagging')
+      Toast.show({ text: `Welcome ${login.user.firstName}!` })
+    } else if (login && login.error) {
+      Toast.show({ text: login.message })
+    }
+
+    this.setState({ loggingIn: false   })
   }
 
   render () {
@@ -77,19 +106,19 @@ class Login extends React.Component {
                   <Text style={styles.branding}>Department of Science and Technology</Text>
                   
                   <Form style={{ marginVertical: 4 }}>
-                    <Item rounded style={styles.formItem}>
-                      <Input placeholder="Email" autoCapitalize="none" autoComplete="email" keyboardType="email-address" />
+                    <Item rounded style={styles.formItem} disabled={this.state.loggingIn} error={this.state.emailError}>
+                      <Input placeholder="Email" autoCapitalize="none" autoComplete="email" keyboardType="email-address" onChangeText={email => this.setState({ email })} disabled={this.state.loggingIn} />
                       <Icon type="MaterialCommunityIcons" name="email" />
                     </Item>
-                    <Item rounded style={styles.formItem}>
-                      <Input placeholder="Password" secureTextEntry={true} />
+                    <Item rounded style={styles.formItem} disabled={this.state.loggingIn} error={this.state.passwordError}>
+                      <Input placeholder="Password" secureTextEntry={true} onChangeText={password => this.setState({ password })} disabled={this.state.loggingIn} />
                       <Icon type="MaterialCommunityIcons" name="textbox-password" />
                     </Item>
 
                     <TouchableWithoutFeedback onPress={() => this.toggleServerSelection()}>
                       <View pointerEvents="box-only" style={{padding: 0}}>
-                        <Item rounded style={styles.formItem}>
-                          <Input placeholder="Server" autoCapitalize="none" editable={false} value={store.get('prefServer')} />
+                        <Item rounded style={styles.formItem} error={this.state.prefServerError}>
+                          <Input placeholder="Server" autoCapitalize="none" editable={false} value={store.get('prefServer')} onChangeText={prefServer => this.setState({ prefServer })} />
                           <Icon type="MaterialCommunityIcons" name="server" />
                         </Item>
 
@@ -99,7 +128,7 @@ class Login extends React.Component {
 
                   </Form>
 
-                  <Button block rounded style={{ marginVertical: 4 }}>
+                  <Button block rounded style={{ marginVertical: 4 }} onPress={() => this.login()}>
                     <Text>Login</Text>
                   </Button>
 
@@ -114,4 +143,4 @@ class Login extends React.Component {
   }
 }
 
-export default Store.withStore(Login)
+export default Store.withStore(LoginScreen)

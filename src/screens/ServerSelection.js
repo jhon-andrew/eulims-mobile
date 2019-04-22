@@ -16,8 +16,7 @@ class ServerSelection extends React.Component {
     }
   }
 
-  componentDidMount () {
-    // Check status of predefined servers
+  checkServers () {
     let servers = this.state.servers
     servers.forEach(async (server, index) => {
       let Server = await CheckServer(server.address)
@@ -54,6 +53,7 @@ class ServerSelection extends React.Component {
         animationType="slide"
         visible={isOpen}
         onRequestClose={() => toggle()}
+        onShow={() => this.checkServers()}
       >
         <Container>
           <Header>

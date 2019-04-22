@@ -11,6 +11,8 @@ class Boot extends React.Component {
   }
 
   async checkAuth () {
+    await AsyncStorage.clear()
+
     let { navigation, store } = this.props
     let prefServer = await AsyncStorage.getItem('prefServer')
     let token = await AsyncStorage.getItem('token')

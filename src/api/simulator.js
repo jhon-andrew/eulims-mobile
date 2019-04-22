@@ -30,7 +30,7 @@ let user = {
 
 // Simulate network latency
 app.use(async (req, res, next) => {
-  let delay = await latency(5000, 7000)
+  let delay = await latency()
   if (req.path !== '/favicon.ico') console.log(req.path, `${delay}ms`)
   next()
 })

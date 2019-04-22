@@ -1,5 +1,7 @@
 import { AsyncStorage } from 'react-native'
+import { Toast } from 'native-base'
 import axios from 'axios'
+
 
 export default class API {
   constructor (server) {
@@ -20,14 +22,14 @@ export default class API {
   }
 
   get (endpoint, params = {}) {
-    console.log('GET', endpoint, params)
+    console.log('GET', this.server, endpoint, params)
     return this.axios.get(endpoint, { params })
       .then(resp => resp.data)
       .catch(err => undefined)
   }
 
   post (endpoint, data) {
-    console.log('POST', endpoint, data)
+    console.log('POST', this.server, endpoint, data)
     return this.axios.post(endpoint, data)
       .then(resp => resp.data)
       .catch(err => undefined)
@@ -36,8 +38,22 @@ export default class API {
 
 // Check Server Status
 export function CheckServer (server) {
-  let api = new API(server)
-  return api.get('/server-status')
+  return new API(server).get('/server-status')
 }
+
+// Single API instance for every request.
+let api = new API()
+
 // Check User
+export function CheckUser () {
+  return api.get('/user')
+}
+
 // Login Function
+export function Login (email, password) {
+  return api.post('/login', { email, password })
+    .then(resp => {
+      if (!resp) Toast.show({ text: 'Connection error.' })
+      return resp
+    })
+} 
