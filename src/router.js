@@ -5,6 +5,7 @@ import Login from './screens/Login'
 import ServerSelection from './screens/ServerSelection'
 import DrawerContent from './screens/SampleTagging/DrawerContent'
 import RecentScans from './screens/SampleTagging/RecentScans'
+import CodeScanner from './screens/SampleTagging/CodeScanner'
 
 let rootNav = createSwitchNavigator(
   {
@@ -22,12 +23,24 @@ let rootNav = createSwitchNavigator(
         }
       }
     ),
-    // Sample Tagging Module
-    sampleTagging: createDrawerNavigator({
-      'Recent Scans': {
-        screen: RecentScans
+    app: createStackNavigator(
+      {
+        // Sample Tagging Module
+        sampleTagging: createDrawerNavigator({
+          'Recent Scans': {
+            screen: RecentScans
+          }
+        }, { contentComponent: DrawerContent }),
+        // Code Scanner Module
+        codeScanner: CodeScanner
+      },
+      {
+        initialRouteName: 'sampleTagging',
+        defaultNavigationOptions: {
+          header: null
+        }
       }
-    }, { contentComponent: DrawerContent })
+    )
   },
   // SwitchNavigator Config
   {

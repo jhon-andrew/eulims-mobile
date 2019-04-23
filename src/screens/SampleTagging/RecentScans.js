@@ -22,7 +22,7 @@ class RecentScans extends React.Component {
             <Title>Recent Scans</Title>
           </Body>
           <Right>
-            <Button transparent icon>
+            <Button transparent icon onPress={() => navigation.navigate('codeScanner')}>
               <Icon type="MaterialCommunityIcons" name="qrcode-scan" />
             </Button>
           </Right>
