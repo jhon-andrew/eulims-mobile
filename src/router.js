@@ -8,7 +8,7 @@ import RecentScans from './screens/SampleTagging/RecentScans'
 
 let rootNav = createSwitchNavigator(
   {
-    // Boot Configuration
+    // Boot Config
     boot: Boot,
     // Login & Server Selection Modules
     auth: createStackNavigator(
@@ -24,16 +24,12 @@ let rootNav = createSwitchNavigator(
     ),
     // Sample Tagging Module
     sampleTagging: createDrawerNavigator({
-      recentScans: {
-        screen: RecentScans,
-        navigationOptions: () => ({
-          title: 'Recent Scans'
-        })
+      'Recent Scans': {
+        screen: RecentScans
       }
-    }, {
-      contentComponent: DrawerContent
-    })
+    }, { contentComponent: DrawerContent })
   },
+  // SwitchNavigator Config
   {
     initialRouteName: 'boot',
     defaultNavigationOptions: {

@@ -19,7 +19,7 @@ class RecentScans extends React.Component {
             </Button>
           </Left>
           <Body>
-            <Title>Recents</Title>
+            <Title>Recent Scans</Title>
           </Body>
           <Right>
             <Button transparent icon>

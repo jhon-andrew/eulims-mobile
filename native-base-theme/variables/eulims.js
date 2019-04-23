@@ -11,6 +11,8 @@ const platformStyle = "material";
 const isIphoneX =
 platform === "ios" && (deviceHeight === 812 || deviceWidth === 812 || deviceHeight === 896 || deviceWidth === 896);
 
+// Base: https://paletton.com/#uid=13p0u0kvjWjj3WDpeWBPQUURMvH
+
 export default {
   platformStyle,
   platform,
@@ -105,7 +107,7 @@ export default {
   checkboxTickColor: "#fff",
 
   // Color
-  brandPrimary: "#3F51B5",
+  brandPrimary: "#0eb7f1", //"#3F51B5",
   brandInfo: "#62B1F6",
   brandSuccess: "#5cb85c",
   brandDanger: "#d9534f",
@@ -136,7 +138,7 @@ export default {
 
   // Footer
   footerHeight: 55,
-  footerDefaultBg: "#3F51B5",
+  footerDefaultBg: "#03B3ED", //"#3F51B5",
   footerPaddingBottom: 0,
 
   // FooterTab
@@ -145,11 +147,11 @@ export default {
   activeTab: "#fff",
   sTabBarActiveTextColor: "#007aff",
   tabBarActiveTextColor: "#fff",
-  tabActiveBgColor: "#3F51B5",
+  tabActiveBgColor: "#03B3ED", //"#3F51B5",
 
   // Header
   toolbarBtnColor: "#fff",
-  toolbarDefaultBg: "#3F51B5",
+  toolbarDefaultBg: "#0eb7f1", //"#3F51B5",
   toolbarHeight: 56,
   toolbarSearchIconSize: 23,
   toolbarInputColor: "#fff",
@@ -202,7 +204,7 @@ export default {
   listItemPadding: 12,
   listNoteColor: "#808080",
   listNoteSize: 13,
-  listItemSelected: "#3F51B5",
+  listItemSelected: "#0eb7f1", //"#3F51B5",
 
   // Progress Bar
   defaultProgressColor: "#E4202D",
