@@ -21,11 +21,22 @@ export default class API {
     return this.server
   }
 
+  alertConnErr () {
+    Toast.show({
+      text: 'Connection error.',
+      buttonText: 'Okay',
+      duration: 3000
+    })
+  }
+
   async get (endpoint, params = {}) {
     if (!this.server) await this.getPrefServer()
     console.log('GET', this.server, endpoint, params)
     return this.axios.get(endpoint, { params })
-      .then(resp => resp.data)
+      .then(({ data }) => {
+        if (!data) this.alertConnErr()
+        return data
+      })
       .catch(err => undefined)
   }
 
@@ -33,7 +44,10 @@ export default class API {
     if (!this.server) await this.getPrefServer()
     console.log('POST', this.server, endpoint, data)
     return this.axios.post(endpoint, data)
-      .then(resp => resp.data)
+      .then(({ data }) => {
+        if (!data) this.alertConnErr()
+        return data
+      })
       .catch(err => undefined)
   }
 }
@@ -54,11 +68,12 @@ export function Login (email, password) {
   let api = new API()
   return api.post('/login', { email, password })
     .then(resp => {
-      if (!resp) Toast.show({
-        text: 'Connection error.',
-        buttonText: 'Okay',
-        duration: 3000
-      })
       return resp
     })
+}
+
+// Get Analysis
+export function GetAnalysis(id) {
+  let api = new API()
+  return api.get('/analysis', { id, token })
 }
