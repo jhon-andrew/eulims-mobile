@@ -1,8 +1,8 @@
 import React from 'React'
 import Store from '../../store'
 import { Container, Grid, Row, Text, Button, Col, Spinner } from 'native-base'
-import { Permissions, BarCodeScanner } from 'expo'
-import { StyleSheet, Dimensions, Vibration } from 'react-native'
+import { Permissions, Camera } from 'expo'
+import { StyleSheet, Dimensions, Vibration, Platform } from 'react-native'
 import theme from '../../../native-base-theme/variables/eulims'
 
 const styles = StyleSheet.create({
@@ -14,8 +14,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   scanner: {
-    width: '100%',
-    height: '100%'
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').width,
+    marginBottom: 8
   }
 })
 
@@ -23,26 +24,40 @@ class CodeScanner extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      cameraAccess: undefined
+      cameraAccess: undefined,
+      ratio: undefined,
+      scannedData: undefined
     }
   }
 
   async componentDidMount () {
     const { status } = await Permissions.askAsync(Permissions.CAMERA)
     this.setState({ cameraAccess: status })
+    this.cameraComponent = this.props.navigation.addListener('willBlur', payload => {
+      this.setState({ cameraAccess: undefined })
+    })
+  }
+
+  componentWillUnmount () {
+    this.cameraComponent.remove()
   }
 
   onScan ({ type, data }) {
     const { navigation } = this.props
     Vibration.vibrate()
-    this.setState({ cameraAccess: 'checking' })
+    this.setState({
+      cameraAccess: 'checking',
+      scannedData: data
+    })
+
+    // Simulate Scanning
     setTimeout(() => {
       navigation.goBack()
     }, 3000)
   }
 
   render () {
-    const { cameraAccess } = this.state
+    const { cameraAccess, scannedData } = this.state
     let content = undefined
     if (!cameraAccess) {
       content = (<Col><Spinner color={theme.brandPrimary} /></Col>)
@@ -50,16 +65,22 @@ class CodeScanner extends React.Component {
       content = (<Col><Text style={styles.captions}>App has been denied access to the camera.</Text></Col>)
     } else if (cameraAccess === 'granted') {
       content = (
-        <BarCodeScanner
-          onBarCodeScanned={this.onScan.bind(this)}
-          style={StyleSheet.absoluteFill}
-        />
+        <Col>
+          <Camera
+            ref={camera => (this.camera = camera)}
+            ratio="1:1"
+            onBarCodeScanned={this.onScan.bind(this)}
+            style={styles.scanner}
+          />
+          <Text style={styles.captions}>Please hold the tag near and steady...</Text>
+        </Col>
       )
     } else {
       content = (
         <Col>
           <Spinner color={theme.brandPrimary} />
           <Text style={styles.captions}>Checking analysis...</Text>
+          <Text style={styles.captions} note>{scannedData}</Text>
         </Col>
       )
     }
