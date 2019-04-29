@@ -6,7 +6,9 @@ import ServerSelection from './screens/ServerSelection'
 import DrawerContent from './screens/SampleTagging/DrawerContent'
 import RecentScans from './screens/SampleTagging/RecentScans'
 import CodeScanner from './screens/SampleTagging/CodeScanner'
-import Analysis from './screens/SampleTagging/Analysis'
+import Search from './screens/SampleTagging/Analysis/Search'
+import Analysis from './screens/SampleTagging/Analysis/Analysis'
+import Tagging from './screens/SampleTagging/Analysis/Tagging'
 
 let rootNav = createSwitchNavigator(
   {
@@ -29,7 +31,16 @@ let rootNav = createSwitchNavigator(
         // Sample Tagging Module
         sampleTagging: createDrawerNavigator({
           'Recent Scans': RecentScans,
-          'Analysis': Analysis
+          'Analysis': createStackNavigator(
+            {
+              Search, Analysis, Tagging
+            },
+            {
+              defaultNavigationOptions: {
+                header: null
+              }
+            }
+          )
         }, { contentComponent: DrawerContent }),
         // Code Scanner Module
         codeScanner: CodeScanner
