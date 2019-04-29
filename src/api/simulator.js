@@ -69,11 +69,18 @@ app.get('/user', (req, res) => {
   res.json({ token, user })
 })
 
+// Get sample code
+app.get('/samplecode', (req, res) => {
+  let sampleCodes = [{"id":"5199","text":"CHE-0865"},{"id":"5210","text":"CHE-0867"},{"id":"5211","text":"CHE-0866"},{"id":"5212","text":"CHE-0868"},{"id":"5213","text":"CHE-0869"},{"id":"5214","text":"CHE-0870"},{"id":"5215","text":"CHE-0871"},{"id":"5216","text":"CHE-0872"},{"id":"5217","text":"CHE-0873"},{"id":"5218","text":"CHE-0874"},{"id":"5226","text":"CHE-0875"},{"id":"5228","text":"CHE-0876"},{"id":"5230","text":"CHE-0877"},{"id":"5231","text":"CHE-0878"},{"id":"5232","text":"CHE-0879"},{"id":"5233","text":"CHE-0880"},{"id":"5234","text":"CHE-0881"},{"id":"5235","text":"CHE-0882"},{"id":"5254","text":"CHE-0883"},{"id":"5255","text":"CHE-0884"}]
+  res.json(sampleCodes.filter(result => result.text.startsWith(req.query.q)))
+})
+
 // Get analysis data
 app.get('/analysis', (req, res) => {
   let sampleId = '25023 2019 CHE-0815'
   if (req.query.id === sampleId) {
     res.json({
+      sampleCode: req.query.id,
       samples: [
         {
           name: 'Oil',

@@ -31,8 +31,8 @@ export default {
   btnUppercaseAndroidText: true,
 
   // Badge
-  badgeBg: "#ED1727",
-  badgeColor: "#fff",
+  badgeBg: "#f4f4f4",
+  badgeColor: "#444444",
   badgePadding: 0,
 
   // Button

@@ -8,6 +8,7 @@ export default class API {
     this.protocol = 'http:'
     this.server = server
     this.axios = null
+    this.token = null
     this.getPrefServer()
   }
 
@@ -27,6 +28,10 @@ export default class API {
       buttonText: 'Okay',
       duration: 3000
     })
+  }
+
+  get token () {
+    return AsyncStorage.getItem('token')
   }
 
   async get (endpoint, params = {}) {
@@ -72,8 +77,16 @@ export function Login (email, password) {
     })
 }
 
-// Get Analysis
-export function GetAnalysis(id) {
+// Get Sample Code
+export async function GetSampleCode(q) {
   let api = new API()
+  let token = await api.token
+  return api.get('/samplecode', { q, token })
+}
+
+// Get Analysis
+export async function GetAnalysis(id) {
+  let api = new API()
+  let token = await api.token
   return api.get('/analysis', { id, token })
 }

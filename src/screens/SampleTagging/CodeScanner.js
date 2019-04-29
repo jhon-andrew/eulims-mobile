@@ -53,11 +53,6 @@ class CodeScanner extends React.Component {
 
     let analysis = await GetAnalysis(data)
     navigation.navigate('Analysis', analysis)
-
-    // Simulate Scanning
-    setTimeout(() => {
-      navigation.goBack()
-    }, 3000)
   }
 
   render () {
