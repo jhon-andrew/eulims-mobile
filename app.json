@@ -22,12 +22,16 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
     "androidStatusBar": {
       "barStyle": "light-content",
       "backgroundColor": "#0eb7f1"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "ph.dost9.eulims"
+    },
+    "android": {
+      "package": "ph.dost9.eulims"
     }
   }
 }
