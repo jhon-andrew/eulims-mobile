@@ -58,7 +58,11 @@ class Analysis extends React.Component {
             <Title>Analysis</Title>
             <Subtitle>{params.sampleCode}</Subtitle>
           </Body>
-          <Right />
+          <Right>
+            <Button transparent icon onPress={() => navigation.pop()}>
+              <Icon type="MaterialCommunityIcons" name="magnify" />
+            </Button>
+          </Right>
         </Header>
         <Content padder>
           <List>

@@ -1,7 +1,7 @@
 import React from 'react'
 import Store from '../../store'
 import { AsyncStorage, StyleSheet, Image } from 'react-native'
-import { DrawerItems } from 'react-navigation'
+import { DrawerItems, NavigationActions } from 'react-navigation'
 import theme from '../../../native-base-theme/variables/eulims'
 import { Container, Header, Body, Title, Subtitle, Left, Right, Content, List, ListItem, Thumbnail, Text, Footer, Button, FooterTab } from 'native-base'
 
@@ -47,7 +47,11 @@ class DrawerContent extends React.Component {
                 selected={(activeItemKey === item.key)}
                 onPress={() => {
                   navigation.closeDrawer()
-                  navigation.navigate(item.key)
+                  if (item.key === 'Analysis') {
+                    navigation.navigate(item.key, {}, NavigationActions.navigate({
+                      routeName: 'Search'
+                    }))
+                  } else navigation.navigate(item.key)
                 }}>
                 <Body>
                   <Text>{item.routeName}</Text>

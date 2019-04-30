@@ -41,7 +41,11 @@ class Search extends React.Component {
           <Body>
             <Title>Search</Title>
           </Body>
-          <Right />
+          <Right>
+            <Button transparent icon onPress={() => navigation.navigate('codeScanner')}>
+              <Icon type="MaterialCommunityIcons" name="qrcode-scan" />
+            </Button>
+          </Right>
         </Header>
         <Content padder>
           <Form>

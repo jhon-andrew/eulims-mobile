@@ -55,6 +55,7 @@ class CodeScanner extends React.Component {
     let analysis = await GetAnalysis(data)
     navigation.navigate('sampleTagging', {}, NavigationActions.navigate({
       routeName: 'Analysis',
+      params: analysis,
       action: NavigationActions.navigate({
         routeName: 'Analysis',
         params: analysis
