@@ -80,12 +80,12 @@ class LoginScreen extends React.Component {
     if (login && login.token) {
       store.set('token')(login.token)
       store.set('user')(login.user)
-      return navigation.navigate('sampleTagging')
       Toast.show({
         text: `Welcome ${login.user.firstName}!`,
         buttonText: 'Okay',
         duration: 3000
       })
+      return navigation.navigate('sampleTagging')
     } else if (login && login.error) {
       Toast.show({
         text: login.message,
