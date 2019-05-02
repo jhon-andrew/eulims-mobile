@@ -69,6 +69,7 @@ Modules are loaded based in order of how it is defined inside [`router.js`](src/
 * [API Documentation](src/api/README.md)
 * [API Toolkit](src/api/index.js)
 * [API Simulator](src/api/simulator.js)
+* [Screenshots](https://photos.app.goo.gl/uknoB2gQq7TBBAjH9)
 
 ---
 
