@@ -35,6 +35,11 @@ app.use(async (req, res, next) => {
   next()
 })
 
+// Redirect to Recent Builds
+app.get('/builds', (req, res) => {
+  res.redirect('https://expo.io/@jhon-andrew/eulims-mobile/builds')
+})
+
 // Server Status
 app.get('/server-status', (req, res) => {
   res.json({
