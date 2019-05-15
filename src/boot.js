@@ -1,7 +1,6 @@
 import React from 'react'
 import Store from './store'
 import { AppLoading } from 'expo'
-import { AsyncStorage } from 'react-native'
 import { CheckServer, CheckUser } from './api'
 
 class Boot extends React.Component {
@@ -12,12 +11,10 @@ class Boot extends React.Component {
   }
 
   async checkAuth () {
-    // await AsyncStorage.clear() // TEMPORARY: Refresh AsyncStorage on every build
-
     let { navigation, store } = this.props
-    let prefServer = await AsyncStorage.getItem('prefServer')
-    let token = await AsyncStorage.getItem('token')
-    let servers = await AsyncStorage.getItem('servers')
+    let prefServer = store.get('prefServer')
+    let token = store.get('token')
+    let servers = store.get('servers')
 
     if (!servers) {
       let Servers = require('./configs.json').servers

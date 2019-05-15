@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const os = require('os')
 
 const app = express()
-const ip = os.networkInterfaces()['Wi-Fi'][0].address
+const ip = os.networkInterfaces()['Wi-Fi'][1].address
 const port = 3000
 
 // Middlewares

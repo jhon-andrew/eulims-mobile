@@ -1,6 +1,6 @@
 import React from 'react'
 import Store from '../../store'
-import { AsyncStorage, StyleSheet, Image } from 'react-native'
+import { StyleSheet, Image } from 'react-native'
 import { DrawerItems, NavigationActions } from 'react-navigation'
 import theme from '../../../native-base-theme/variables/eulims'
 import { Container, Header, Body, Title, Subtitle, Left, Right, Content, List, ListItem, Thumbnail, Text, Footer, Button, FooterTab } from 'native-base'
@@ -21,8 +21,9 @@ class DrawerContent extends React.Component {
 
   async logout () {
     let { store, navigation } = this.props
-    await AsyncStorage.clear()
     store.set('prefServer')(undefined)
+    store.set('token')(undefined)
+    store.set('user')(undefined)
     navigation.navigate('auth')
   }
 

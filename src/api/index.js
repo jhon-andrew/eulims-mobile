@@ -1,92 +1,74 @@
-import { AsyncStorage } from 'react-native'
 import { Toast } from 'native-base'
 import axios from 'axios'
 
-
+// API Toolkit
 export default class API {
-  constructor (server) {
+  constructor (store) {
+    this.store = store
     this.protocol = 'http:'
-    this.server = server
-    this.axios = null
-    this.token = null
-    this.getPrefServer()
   }
 
-  async getPrefServer () {
-    this.server = this.server || await AsyncStorage.getItem('prefServer')
-    this.axios = axios.create({
-      baseURL: `${this.protocol}//${this.server}`,
-      responseType: 'json'
-    })
-
-    return this.server
-  }
-
-  alertConnErr () {
-    Toast.show({
-      text: 'Connection error.',
-      buttonText: 'Okay',
-      duration: 3000
-    })
+  get server () {
+    return this.store.get('prefServer')
   }
 
   get token () {
-    return AsyncStorage.getItem('token')
+    return this.store.get('token')
   }
 
-  async get (endpoint, params = {}) {
-    if (!this.server) await this.getPrefServer()
-    console.log('GET', this.server, endpoint, params)
+  get axios () {
+    let config = {
+      baseURL: `${this.protocol}//${this.server}`,
+      responseType: 'json'
+    }
+
+    if (this.store.get('token')) {
+      config.headers = {
+        Authorization: `Bearer ${this.store.get('token')}`
+      }
+    }
+
+    return axios.create(config)
+  }
+
+  get (endpoint, params = {}) {
+    console.log('', this.server, endpoint)
     return this.axios.get(endpoint, { params })
-      .then(({ data }) => {
-        if (!data) this.alertConnErr()
-        return data
-      })
-      .catch(err => undefined)
-  }
-
-  async post (endpoint, data) {
-    if (!this.server) await this.getPrefServer()
-    console.log('POST', this.server, endpoint, data)
-    return this.axios.post(endpoint, data)
-      .then(({ data }) => {
-        if (!data) this.alertConnErr()
-        return data
-      })
-      .catch(err => undefined)
-  }
-}
-
-// Check Server Status
-export function CheckServer (server) {
-  return new API(server).get('/server-status')
-}
-
-// Check User
-export function CheckUser (token) {
-  let api = new API()
-  return api.get('/user', { token })
-}
-
-// Login Function
-export function Login (email, password) {
-  let api = new API()
-  return api.post('/login', { email, password })
-    .then(resp => {
-      return resp
+    .then(({ data }) => {
+      if (!data) console.log('ERROR:', data)
+      return data
     })
-}
+    .catch(err => undefined)
+  }
 
-// Get Sample Code
-export async function GetSampleCode(q) {
-  let api = new API()
-  let token = await api.token
-  return api.get('/samplecode', { q, token })
-}
+  post (endpoint, data) {
+    console.log('', this.server, endpoint)
+    return this.axios.post(endpoint, data)
+    .then(({ data }) => {
+      if (!data) console.log('ERROR:', data)
+      return data
+    })
+    .catch(err => undefined)
+  }
 
-// Get Analysis
-export async function GetAnalysis(id) {
-  let api = new API()
-  let token = await api.token
-  return api.get('/analysis', { id, token })
+  // Check Server
+  checkServer (server) {
+    return axios.get(server)
+    .then(({ data }) => {
+      if (!data) console.log('Check Server ERROR:', data)
+    })
+    .catch(err => undefined)
+  }
+
+  // Check User
+  checkUser = () => this.get('/user')
+
+  // Login
+  login = (email, password) => this.post('/login', { email, password })
+
+  // Get Sample Code
+  getSampleCode = (query) => this.get('/samplecode', { q: query })
+
+  // Get Analysis
+  getAnalysis = (id) => this.get({ id })
 }

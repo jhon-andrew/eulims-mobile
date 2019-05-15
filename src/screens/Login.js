@@ -4,7 +4,7 @@ import { SplashScreen, LinearGradient, Constants } from 'expo'
 import { StyleSheet, Dimensions, Keyboard, Image, TouchableWithoutFeedback } from 'react-native'
 import { Container, Content, View, H2, Text, Form, Item, Input, Icon, Button, Toast, Spinner } from 'native-base'
 import theme from '../../native-base-theme/variables/eulims'
-import { Login } from '../api'
+import API from '../api'
 
 const styles = StyleSheet.create({
   verticallyCentered: {
@@ -54,6 +54,8 @@ class LoginScreen extends React.Component {
   componentDidMount () {
     SplashScreen.hide()
 
+    const { navigation, store } = this.props
+
     this.listeners = [
       Keyboard.addListener('keyboardDidShow', ({ endCoordinates }) => {
         this.changeViewHeight(endCoordinates.height)
@@ -61,12 +63,10 @@ class LoginScreen extends React.Component {
       Keyboard.addListener('keyboardDidHide', () => {
         this.changeViewHeight()
       }),
-      this.props.navigation.addListener('didFocus', () => {
-        this.setState({ prefServer: this.props.store.get('prefServer') })
+      navigation.addListener('didFocus', () => {
+        this.setState({ prefServer: store.get('prefServer') })
       })
     ]
-
-    const { navigation, store } = this.props
 
     if (navigation.getParam('message')) {
       Toast.show({
@@ -90,19 +90,20 @@ class LoginScreen extends React.Component {
   }
 
   async login () {
-    const { email, password, prefServer } = this.state
+    const { email, password } = this.state
+    const { store, navigation } = this.props
 
     this.setState({
-      emailError: !this.state.email,
-      passwordError: !this.state.password,
-      prefServerError: !this.state.prefServer
+      emailError: !email,
+      passwordError: !password,
+      prefServerError: !store.get('prefServer')
     })
 
-    if (!email || !password || !prefServer) return false
+    if (!email || !password || !store.get('prefServer')) return false
 
     this.setState({ loggingIn: true })
-    const login = await Login(this.state.email, this.state.password)
-    const { store, navigation } = this.props
+    const api = new API(store)
+    const login = await api.login(email, password)
 
     if (login && login.token) {
       store.set('token')(login.token)
@@ -143,7 +144,7 @@ class LoginScreen extends React.Component {
                 <TouchableWithoutFeedback onPress={() => navigation.navigate('serverSelection')}>
                   <View pointerEvents="box-only" style={{padding: 0}}>
                     <Item rounded style={styles.formItem} error={this.state.prefServerError}>
-                      <Input placeholder="Server" autoCapitalize="none" editable={false} value={store.get('prefServer')} onChangeText={prefServer => this.setState({ prefServer })} />
+                      <Input placeholder="Server" autoCapitalize="none" editable={false} value={store.get('prefServer')} />
                       <Icon type="MaterialCommunityIcons" name="server" />
                     </Item>
                   </View>
@@ -155,6 +156,7 @@ class LoginScreen extends React.Component {
               </Button>
 
               <Text style={styles.footer}>EULIMS Mobile v0.1 Beta</Text>
+              <Text style={styles.footer}>{this.state.prefServer}</Text>
             </View>
           </Content>
         </LinearGradient>
