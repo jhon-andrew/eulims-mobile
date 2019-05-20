@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const os = require('os')
+const faker = require('faker')
 
 const app = express()
 const ip = os.networkInterfaces()['Wi-Fi'][1].address

@@ -1,10 +1,10 @@
 import React from 'react'
-import Store from '../store'
+import Store from '../../store'
 import { SplashScreen, LinearGradient, Constants } from 'expo'
 import { StyleSheet, Dimensions, Keyboard, Image, TouchableWithoutFeedback } from 'react-native'
 import { Container, Content, View, H2, Text, Form, Item, Input, Icon, Button, Toast, Spinner } from 'native-base'
-import theme from '../../native-base-theme/variables/eulims'
-import API from '../api'
+import theme from '../../../native-base-theme/variables/eulims'
+import API from '../../api'
 
 const styles = StyleSheet.create({
   verticallyCentered: {
@@ -128,7 +128,7 @@ class LoginScreen extends React.Component {
         <LinearGradient colors={['#b1d1e4', '#3c8dbc']} start={[0.0, 0.5]} end={[0.5, 1.0]} style={{ flex: 1 }}>
           <Content padder>
             <View style={[styles.verticallyCentered, { minHeight: this.state.dynamicHeight }]}>
-              <Image source={require('../../assets/onelab-512.png')} style={styles.logo} />
+              <Image source={require('../../../assets/onelab-512.png')} style={styles.logo} />
               <H2 style={styles.branding}>Enhanced Unified Laboratory Information Management System</H2>
               <Text style={styles.branding}>Department of Science and Technology</Text>
 

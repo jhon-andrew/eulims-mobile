@@ -39,7 +39,7 @@ class Analysis extends React.Component {
         status: 'pending'
       }
     ]
-    navigation.navigate('Tagging', test)
+    navigation.navigate('tagging', test)
   }
 
   render () {
@@ -59,7 +59,7 @@ class Analysis extends React.Component {
             <Subtitle>{params.sampleCode}</Subtitle>
           </Body>
           <Right>
-            <Button transparent icon onPress={() => navigation.pop()}>
+            <Button transparent icon onPress={() => navigation.replace('search')}>
               <Icon type="MaterialCommunityIcons" name="magnify" />
             </Button>
           </Right>

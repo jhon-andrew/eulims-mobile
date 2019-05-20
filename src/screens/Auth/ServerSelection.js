@@ -1,9 +1,9 @@
 import React from 'react'
-import Store from '../store'
+import Store from '../../store'
 import { Modal } from 'react-native'
 import { Container, Header, Left, Button, Icon, Body, Title, Content, List, ListItem, Text, Right, Spinner, Input, Form, Item, Label, View, Footer } from 'native-base'
-import theme from '../../native-base-theme/variables/eulims'
-import { CheckServer } from '../api'
+import theme from '../../../native-base-theme/variables/eulims'
+import { CheckServer } from '../../api'
 
 class ServerSelection extends React.Component {
   constructor (props) {
@@ -13,15 +13,6 @@ class ServerSelection extends React.Component {
       prefServer: props.store.get('prefServer'),
       servers: props.store.get('servers')
     }
-  }
-
-  checkServers () {
-    let servers = this.props.store.get('servers')
-    servers.forEach(async (server, index) => {
-      let Server = await CheckServer(server.address)
-      servers[index].status = (Server && Server.status === 'online') ? 'online' : 'offline'
-      this.setState({ servers })
-    })
   }
 
   savePrefServer () {

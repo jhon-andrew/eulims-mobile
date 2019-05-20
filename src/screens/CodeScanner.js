@@ -1,10 +1,10 @@
 import React from 'React'
-import Store from '../../store'
+import Store from '../store'
 import { Container, Grid, Row, Text, Button, Col, Spinner } from 'native-base'
 import { Permissions, Camera } from 'expo'
 import { StyleSheet, Dimensions, Vibration, Platform } from 'react-native'
-import theme from '../../../native-base-theme/variables/eulims'
-import API from '../../api'
+import theme from '../../native-base-theme/variables/eulims'
+import API from '../api'
 import { NavigationActions } from 'react-navigation';
 
 const styles = StyleSheet.create({
@@ -32,16 +32,21 @@ class CodeScanner extends React.Component {
     }
   }
 
-  async componentDidMount () {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA)
-    this.setState({ cameraAccess: status })
-    this.cameraComponent = this.props.navigation.addListener('willBlur', payload => {
-      this.setState({ cameraAccess: undefined })
-    })
+  componentDidMount () {
+    const { navigation } = this.props
+    this.listeners = [
+      navigation.addListener('didFocus', async () => {
+        const { status } = await Permissions.askAsync(Permissions.CAMERA)
+        this.setState({ cameraAccess: status })
+      }),
+      navigation.addListener('willBlur', payload => {
+        this.setState({ cameraAccess: undefined })
+      })
+    ]
   }
 
   componentWillUnmount () {
-    this.cameraComponent.remove()
+    this.listeners.forEach(listener => listener.remove())
   }
 
   async onScan ({ type, data }) {
@@ -55,14 +60,7 @@ class CodeScanner extends React.Component {
     let api = new API(store)
     let analysis = await api.getAnalysis(data)
 
-    navigation.navigate('sampleTagging', {}, NavigationActions.navigate({
-      routeName: 'Analysis',
-      params: analysis,
-      action: NavigationActions.navigate({
-        routeName: 'Analysis',
-        params: analysis
-      })
-    }))
+    navigation.navigate('analysis', analysis)
   }
 
   render () {
