@@ -2,7 +2,7 @@ import React from 'react'
 import Store from '../../../store'
 import { Container, Header, Left, Button, Body, Title, Right, Content, Form, Item, Input, Icon, List, ListItem, Text } from 'native-base'
 import { StyleSheet } from 'react-native'
-import { GetSampleCode } from '../../../api'
+import API from '../../../api'
 
 const styles = StyleSheet.create({
   listHeader: {
@@ -23,7 +23,8 @@ class Search extends React.Component {
   }
 
   async search (searchTerm) {
-    let searchResults = (searchTerm.length >= 3) ? await GetSampleCode(searchTerm) : []
+    const api = new API(this.props.store)
+    let searchResults = (searchTerm.length >= 3) ? await api.getSampleCode(searchTerm) : []
     this.setState({ searchResults })
   }
 

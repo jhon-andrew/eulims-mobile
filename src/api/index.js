@@ -6,14 +6,8 @@ export default class API {
   constructor (store) {
     this.store = store
     this.protocol = 'http:'
-  }
-
-  get server () {
-    return this.store.get('prefServer')
-  }
-
-  get token () {
-    return this.store.get('token')
+    this.server = store.get('prefServer')
+    this.token = store.get('token')
   }
 
   get axios () {
@@ -22,9 +16,9 @@ export default class API {
       responseType: 'json'
     }
 
-    if (this.store.get('token')) {
+    if (this.token) {
       config.headers = {
-        Authorization: `Bearer ${this.store.get('token')}`
+        Authorization: `Bearer ${this.token}`
       }
     }
 
@@ -32,7 +26,7 @@ export default class API {
   }
 
   get (endpoint, params = {}) {
-    console.log('', this.server, endpoint)
+    console.log('[GET]:', this.server, endpoint)
     return this.axios.get(endpoint, { params })
     .then(({ data }) => {
       if (!data) console.log('ERROR:', data)
@@ -42,7 +36,7 @@ export default class API {
   }
 
   post (endpoint, data) {
-    console.log('', this.server, endpoint)
+    console.log('[POST]:', this.server, endpoint)
     return this.axios.post(endpoint, data)
     .then(({ data }) => {
       if (!data) console.log('ERROR:', data)
@@ -53,11 +47,15 @@ export default class API {
 
   // Check Server
   checkServer (server) {
-    return axios.get(server)
+    return axios.get(`${this.protocol}//${server}/server-status`)
     .then(({ data }) => {
       if (!data) console.log('Check Server ERROR:', data)
+      return data
     })
-    .catch(err => undefined)
+    .catch(err => {
+      console.log(err)
+      return undefined
+    })
   }
 
   // Check User
@@ -70,5 +68,5 @@ export default class API {
   getSampleCode = (query) => this.get('/samplecode', { q: query })
 
   // Get Analysis
-  getAnalysis = (id) => this.get({ id })
+  getAnalysis = (id) => this.get('/analysis', { id })
 }

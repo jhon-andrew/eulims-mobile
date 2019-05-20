@@ -4,7 +4,7 @@ import { Container, Grid, Row, Text, Button, Col, Spinner } from 'native-base'
 import { Permissions, Camera } from 'expo'
 import { StyleSheet, Dimensions, Vibration, Platform } from 'react-native'
 import theme from '../../../native-base-theme/variables/eulims'
-import { GetAnalysis } from '../../api'
+import API from '../../api'
 import { NavigationActions } from 'react-navigation';
 
 const styles = StyleSheet.create({
@@ -45,14 +45,16 @@ class CodeScanner extends React.Component {
   }
 
   async onScan ({ type, data }) {
-    const { navigation } = this.props
+    const { navigation, store } = this.props
     Vibration.vibrate()
     this.setState({
       cameraAccess: 'checking',
       scannedData: data
     })
 
-    let analysis = await GetAnalysis(data)
+    let api = new API(store)
+    let analysis = await api.getAnalysis(data)
+
     navigation.navigate('sampleTagging', {}, NavigationActions.navigate({
       routeName: 'Analysis',
       params: analysis,

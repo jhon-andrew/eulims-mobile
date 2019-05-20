@@ -61,7 +61,8 @@ app.post('/login', (req, res) => {
 
 // Route Guard - Everything after this are protected with authentication.
 app.use((req, res, next) => {
-  if (req.query.token !== token) {
+  let bearer = req.get('authorization') ? req.get('authorization').split(' ')[1] : 'no auth token'
+  if (bearer !== token) {
     res.json({
       error: true,
       message: 'Please login to continue.'

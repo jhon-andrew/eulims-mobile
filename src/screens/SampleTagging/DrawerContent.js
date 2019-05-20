@@ -21,7 +21,6 @@ class DrawerContent extends React.Component {
 
   async logout () {
     let { store, navigation } = this.props
-    store.set('prefServer')(undefined)
     store.set('token')(undefined)
     store.set('user')(undefined)
     navigation.navigate('auth')

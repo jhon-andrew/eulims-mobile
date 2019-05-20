@@ -156,7 +156,6 @@ class LoginScreen extends React.Component {
               </Button>
 
               <Text style={styles.footer}>EULIMS Mobile v0.1 Beta</Text>
-              <Text style={styles.footer}>{this.state.prefServer}</Text>
             </View>
           </Content>
         </LinearGradient>

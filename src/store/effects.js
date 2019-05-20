@@ -1,13 +1,14 @@
 import { AsyncStorage } from 'react-native'
 
+// AsyncStorage.clear() // FOR DEBUGGING PURPOSES ONLY
+
 export default async function (store) {
   // Restore persisted app states
   const persistedStates = await AsyncStorage.getAllKeys()
 
   if (persistedStates.length > 0) {
     const states = await AsyncStorage.multiGet(persistedStates)
-    states.forEach(pair => {
-      console.log(`Restoring ${pair[0]} state.`)
+    states.forEach(async (pair) => {
       store.set(pair[0])(JSON.parse(pair[1]))
     })
   }
