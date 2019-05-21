@@ -5,6 +5,7 @@ import Auth from './screens/Auth/router'
 import DrawerContent from './screens/DrawerContent'
 import CodeScanner from './screens/CodeScanner'
 import SampleTagging from './screens/SampleTagging/router'
+import Inventory from './screens/Inventory/router'
 
 const rootNav = createSwitchNavigator({
   boot: Boot,
@@ -13,7 +14,8 @@ const rootNav = createSwitchNavigator({
     {
       // Module Routers
       codeScanner: CodeScanner,
-      sampleTagging: SampleTagging
+      sampleTagging: SampleTagging,
+      inventory: Inventory
     },
     {
       // Drawer Configuration

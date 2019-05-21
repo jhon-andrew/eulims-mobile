@@ -29,6 +29,11 @@ class DrawerContent extends React.Component {
           label: 'Analysis',
           screens: ['search', 'analysis', 'tagging'],
           defaultScreen: 'search'
+        },
+        {
+          label: 'Products',
+          screens: ['products'],
+          defaultScreen: 'products'
         }
       ]
     }
