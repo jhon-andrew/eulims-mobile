@@ -1,7 +1,7 @@
 import React from 'react'
 import Store from '../../store'
-import { Container, Header, Body, Title, Left, Button, Icon, Right, Content, List, ListItem, Text, Thumbnail, Form, Item, Input, Picker } from 'native-base'
-import { image, commerce, random, seed } from 'faker'
+import { Container, Header, Body, Title, Left, Button, Icon, Right, Content, List, ListItem, Text, Thumbnail, Form, Item, Input, Picker, Badge, Spinner } from 'native-base'
+import API from '../../api'
 
 class Products extends React.Component {
   constructor (props) {
@@ -9,14 +9,15 @@ class Products extends React.Component {
     this.state = {
       search: '',
       sortBy: 'all',
-      testProductsDb: [...Array(20)].map(i => ({
-        id: random.uuid(),
-        product: commerce.product(),
-        productName: commerce.productName(),
-        thumbnail: image.image(),
-        type: random.arrayElement(['consumable', 'equipment'])
-      }))
+      products: []
     }
+  }
+
+  async componentDidMount () {
+    const api = new API(this.props.store)
+    this.setState({
+      products: await api.getProducts()
+    })
   }
 
   changeSort (sortBy) {
@@ -25,7 +26,7 @@ class Products extends React.Component {
 
   render () {
     const { navigation } = this.props
-    seed(1)
+    const { products } = this.state
 
     return (
       <Container>
@@ -72,7 +73,17 @@ class Products extends React.Component {
                 </Form>
               </Right>
             </ListItem>
-            {this.state.testProductsDb.filter(({product, type}) => {
+            {/* Loading Spinner */}
+            { products.length === 0 ? (
+              <ListItem>
+                <Body>
+                  <Spinner color="gray" />
+                </Body>
+              </ListItem>
+            ) : null }
+
+            {/* Products List */}
+            {this.state.products.filter(({product, type}) => {
               const { search, sortBy } = this.state
               let q = product.toLowerCase().startsWith(search.toLowerCase())
               let s = (sortBy === 'all') ? (type !== sortBy) : (type === sortBy)
@@ -85,8 +96,12 @@ class Products extends React.Component {
                 <Body>
                   <Text>{ product.product }</Text>
                   <Text note>{ product.productName }</Text>
-                  <Text note>{ product.type }</Text>
                 </Body>
+                <Right>
+                  <Badge>
+                    <Text note style={{ fontSize: 10 }}>{ product.type }</Text>
+                  </Badge>
+                </Right>
               </ListItem>
             ))}
           </List>

@@ -69,4 +69,7 @@ export default class API {
 
   // Get Analysis
   getAnalysis = (id) => this.get('/analysis', { id })
+
+  // Get Products
+  getProducts = () => this.get('/products')
 }

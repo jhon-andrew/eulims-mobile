@@ -1,7 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const os = require('os')
-const faker = require('faker')
+const { random, commerce, image } = require('faker')
 
 const app = express()
 const ip = os.networkInterfaces()['Wi-Fi'][1].address
@@ -94,63 +94,31 @@ app.get('/analysis', (req, res) => {
           description: 'Scheme: QFCS, Round: FC221, Sample: 778-Fat Quality, Storage: 2-8 C, approx. 150 g sample, in an amber glass bottle.'
         }
       ],
-      tests: [
+      tests: [...Array(10)].map((test, id) => (
         {
-          id: 1,
-          name: 'Package B',
-          method: null,
+          id,
+          name: random.arrayElement(['Package A', 'Package B', 'Moisture Content', 'Ash', 'Volatile Matter', 'Fixed Carbon', 'Heating Value']),
+          method: random.arrayElement([null, 'Air oven drying @ 107 C', 'Gravimetric Method/Furnace @ 750 C', 'Gravimetric Method/Furnace @ 950 C', 'By difference', 'Bomb calorimetry']),
           progress: 0,
-          workflow: 6,
-          status: 'pending'
-        },
-        {
-          id: 2,
-          name: 'Moisture Content	',
-          method: 'Air oven drying @ 107 C',
-          progress: 0,
-          workflow: 4,
-          status: 'pending'
-        },
-        {
-          id: 3,
-          name: 'Ash',
-          method: 'Gravimetric Method/Furnace @ 750 C',
-          progress: 0,
-          workflow: 5,
-          status: 'pending'
-        },
-        {
-          id: 4,
-          name: 'Volatile Matter',
-          method: 'Gravimetric Method/Furnace @ 950 C',
-          progress: 0,
-          workflow: 5,
-          status: 'pending'
-        },
-        {
-          id: 5,
-          name: 'Fixed Carbon',
-          method: 'By difference',
-          progress: 0,
-          workflow: 5,
-          status: 'pending'
-        },
-        {
-          id: 6,
-          name: 'Heating Value',
-          method: 'Bomb calorimetry',
-          progress: 0,
-          workflow: 4,
+          workflow: random.number(6),
           status: 'pending'
         }
-      ]
+      ))
     })
   } else {
-    res.json({
-      error: true,
-      message: 'Invalid Tag'
-    })
+    res.json({ error: true, message: 'Invalid Tag' })
   }
+})
+
+// Get products data
+app.get('/products', (req, res) => {
+  res.json([...Array(20)].map((product, id) => ({
+    id,
+    product: commerce.product(),
+    productName: commerce.productName(),
+    thumbnail: image.image(),
+    type: random.arrayElement(['consumable', 'equipment'])
+  })))
 })
 
 // Start Server
