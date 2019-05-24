@@ -114,8 +114,8 @@ app.get('/analysis', (req, res) => {
 app.get('/products', (req, res) => {
   res.json([...Array(20)].map((product, id) => ({
     id,
-    product: commerce.product(),
-    productName: commerce.productName(),
+    code: commerce.product(),
+    name: commerce.productName(),
     thumbnail: image.image(),
     type: random.arrayElement(['consumable', 'equipment'])
   })))

@@ -44,7 +44,7 @@ class Products extends React.Component {
         <Content>
           <Form style={{ margin: 10 }}>
             <Item rounded style={{ paddingHorizontal: 8 }}>
-              <Input placeholder="Search Product" onChangeText={search => this.setState({ search })} />
+              <Input placeholder="Search" onChangeText={search => this.setState({ search })} />
               <Icon type="MaterialCommunityIcons" name="magnify" />
             </Item>
           </Form>
@@ -83,19 +83,20 @@ class Products extends React.Component {
             ) : null }
 
             {/* Products List */}
-            {this.state.products.filter(({product, type}) => {
+            {this.state.products.filter(({ code, name, type }) => {
               const { search, sortBy } = this.state
-              let q = product.toLowerCase().startsWith(search.toLowerCase())
-              let s = (sortBy === 'all') ? (type !== sortBy) : (type === sortBy)
-              return q && s
+              let productCode = code.toLowerCase().startsWith(search.toLowerCase())
+              let productName = name.toLowerCase().startsWith(search.toLowerCase())
+              let sort = (sortBy === 'all') ? (type !== sortBy) : (type === sortBy)
+              return (productCode || productName) && sort
             }).map(product => (
-              <ListItem key={product.id} thumbnail>
+              <ListItem key={product.id} thumbnail onPress={() => navigation.navigate('product', product)}>
                 <Left style={{ marginLeft: 10 }}>
                   <Thumbnail square source={{ uri: product.thumbnail }} />
                 </Left>
                 <Body>
-                  <Text>{ product.product }</Text>
-                  <Text note>{ product.productName }</Text>
+                  <Text>{ product.code }</Text>
+                  <Text note>{ product.name }</Text>
                 </Body>
                 <Right>
                   <Badge>
