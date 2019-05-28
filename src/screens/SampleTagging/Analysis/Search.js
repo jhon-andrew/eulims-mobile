@@ -60,8 +60,8 @@ class Search extends React.Component {
               <Text>Results ({searchResults.length})</Text>
             </ListItem>
             { searchResults.map((result, index) => (
-              <ListItem key={index}>
-                <Text>{result.text}</Text>
+              <ListItem key={result.sample_id}>
+                <Text>{result.sample_code}</Text>
               </ListItem>
             )) }
           </List>

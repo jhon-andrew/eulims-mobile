@@ -41,8 +41,8 @@ class Tagging extends React.Component {
       <Container>
         <Header>
           <Left>
-            <Button transparent icon onPress={() => navigation.toggleDrawer()}>
-              <Icon type="MaterialCommunityIcons" name="menu" />
+            <Button transparent icon onPress={() => navigation.goBack()}>
+              <Icon type="MaterialCommunityIcons" name="arrow-left" />
             </Button>
           </Left>
           <Body>

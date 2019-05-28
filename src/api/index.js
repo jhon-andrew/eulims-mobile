@@ -12,7 +12,7 @@ export default class API {
 
   get axios () {
     let config = {
-      baseURL: `${this.protocol}//${this.server}`,
+      baseURL: `${this.protocol}//${this.server}/api/restapi`,
       responseType: 'json'
     }
 
@@ -47,7 +47,7 @@ export default class API {
 
   // Check Server
   checkServer (server) {
-    return axios.get(`${this.protocol}//${server}/server-status`)
+    return axios.get(`${this.protocol}//${server}/api/restapi/server`)
     .then(({ data }) => {
       if (!data) console.log('Check Server ERROR:', data)
       return data
