@@ -1,6 +1,6 @@
 import React from 'react'
 import Store from '../../store'
-import { Modal } from 'react-native'
+import { Alert } from 'react-native'
 import { Container, Header, Left, Button, Icon, Body, Title, Content, List, ListItem, Text, Right, Spinner, Input, Form, Item, Label, View, Footer } from 'native-base'
 import theme from '../../../native-base-theme/variables/eulims'
 import { CheckServer } from '../../api'
@@ -18,7 +18,7 @@ class ServerSelection extends React.Component {
   savePrefServer () {
     let { store, navigation } = this.props
     store.set('prefServer')(this.state.prefServer)
-    navigation.goBack()
+    navigation.pop()
   }
 
   addServer () {
@@ -37,19 +37,20 @@ class ServerSelection extends React.Component {
     this.Content._root.scrollToEnd()
   }
 
-  // Temporary
-  serverStatus (serverStatus) {
-    switch(serverStatus) {
-      case 'checking':
-        return (<Spinner size="small" style={{ height: 29 }} color={theme.brandDark} />)
-      break
-      case 'online':
-        return (<Icon type="MaterialCommunityIcons" name="lan-connect" style={{ color: theme.brandSuccess }} />)
-      break
-      case 'offline':
-        return (<Icon type="MaterialCommunityIcons" name="lan-disconnect" style={{ color: theme.brandDanger }} />)
-      break
-    }
+  async removeServer (index, serverName) {
+    Alert.alert(
+      serverName,
+      'Are you sure you want to delete this server?',
+      [
+        { text: 'Delete', onPress: () => {
+          let { servers } = this.state
+          servers.splice(index, 1)
+          this.setState({ servers })
+          this.props.store.set('servers')(servers)
+        }, style: 'destructive' },
+        { text: 'Cancel', style: 'cancel' }
+      ]
+    )
   }
 
   render () {
@@ -59,7 +60,7 @@ class ServerSelection extends React.Component {
       <Container>
         <Header>
           <Left>
-            <Button transparent icon onPress={() => navigation.goBack()}>
+            <Button transparent icon onPress={() => navigation.pop()}>
               <Icon type="MaterialCommunityIcons" name="arrow-left" />
             </Button>
           </Left>
@@ -85,6 +86,11 @@ class ServerSelection extends React.Component {
                     <Text>{server.name}</Text>
                     <Text note>{server.address}</Text>
                   </Body>
+                  <Right>
+                    <Button small rounded danger icon onPress={this.removeServer.bind(this, index, server.name)}>
+                      <Icon type="MaterialCommunityIcons" name="delete-forever" />
+                    </Button>
+                  </Right>
                 </ListItem>
               ))
             }

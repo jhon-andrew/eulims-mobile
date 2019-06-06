@@ -14,7 +14,7 @@ class RecentScans extends React.Component {
       <Container>
         <Header>
           <Left>
-            <Button transparent icon onPress={() => navigation.toggleDrawer()}>
+            <Button transparent icon onPress={navigation.toggleDrawer.bind(this)}>
               <Icon type="MaterialCommunityIcons" name="menu" />
             </Button>
           </Left>

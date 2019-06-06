@@ -5,7 +5,7 @@ import { setCustomText, setCustomTextInput } from 'react-native-global-props'
 import getTheme from './native-base-theme/components'
 import eulimsTheme from './native-base-theme/variables/eulims'
 import Store from './src/store'
-import Router from './src/router'
+import Router from './src/router.test'
 import { StyleProvider, Root } from 'native-base'
 
 export default class App extends React.Component {

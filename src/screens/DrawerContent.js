@@ -2,7 +2,8 @@ import React from 'react'
 import Store from '../store'
 import { StyleSheet, Image, AsyncStorage } from 'react-native'
 import theme from '../../native-base-theme/variables/eulims'
-import { Container, Header, Body, Title, Subtitle, Right, Content, List, ListItem, Thumbnail, Text, Footer, Button, FooterTab } from 'native-base'
+import { Container, Header, Body, Title, Subtitle, Right, Content, List, ListItem, Thumbnail, Text, Footer, Button, FooterTab, Spinner } from 'native-base'
+import { NavigationActions } from 'react-navigation'
 
 const styles = StyleSheet.create({
   logo: {
@@ -35,15 +36,21 @@ class DrawerContent extends React.Component {
           screens: ['products'],
           defaultScreen: 'products'
         }
-      ]
+      ],
+      loggingOut: false
     }
   }
 
   async logout () {
     let { store, navigation } = this.props
+
+    this.setState({ loggingOut: true })
+
     store.set('token')(undefined)
     store.set('user')(undefined)
     await AsyncStorage.multiRemove(['token', 'user'])
+
+    this.setState({ loggingOut: false })
     navigation.navigate('auth')
   }
 
@@ -66,9 +73,8 @@ class DrawerContent extends React.Component {
             {this.state.routes.map((route, index) => (
               <ListItem
                 key={route.label}
-                selected={(this.state.selectedRoute === index)}
+                selected={false}
                 onPress={() => {
-                  this.setState({ selectedRoute: index })
                   navigation.closeDrawer(),
                   navigation.navigate(route.defaultScreen)
                 }}
@@ -85,8 +91,8 @@ class DrawerContent extends React.Component {
             {/* <Button>
               <Text>Settings</Text>
             </Button> */}
-            <Button active onPress={() => this.logout()}>
-              <Text>Logout</Text>
+            <Button active onPress={() => this.logout()} disabled={this.state.loggingOut}>
+            { this.state.loggingOut ? (<Spinner color="#ffffff" />) : (<Text>Logout</Text>) }
             </Button>
           </FooterTab>
         </Footer>

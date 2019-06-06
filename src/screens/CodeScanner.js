@@ -5,7 +5,6 @@ import { Permissions, Camera } from 'expo'
 import { StyleSheet, Dimensions, Vibration, Platform } from 'react-native'
 import theme from '../../native-base-theme/variables/eulims'
 import API from '../api'
-import { NavigationActions } from 'react-navigation';
 
 const styles = StyleSheet.create({
   container: {

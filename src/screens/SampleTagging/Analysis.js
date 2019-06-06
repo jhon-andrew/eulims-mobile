@@ -50,7 +50,7 @@ class Analysis extends React.Component {
       <Container>
         <Header>
           <Left>
-            <Button transparent icon onPress={() => navigation.goBack()}>
+            <Button transparent icon onPress={() => navigation.pop()}>
               <Icon type="MaterialCommunityIcons" name="arrow-left" />
             </Button>
           </Left>
@@ -59,7 +59,7 @@ class Analysis extends React.Component {
             <Subtitle>{params.sampleCode}</Subtitle>
           </Body>
           <Right>
-            <Button transparent icon onPress={() => navigation.replace('search')}>
+            <Button transparent icon onPress={() => navigation.popToTop()}>
               <Icon type="MaterialCommunityIcons" name="magnify" />
             </Button>
           </Right>

@@ -1,12 +1,10 @@
 import { createStackNavigator } from 'react-navigation'
-import RecentScans from '../RecentScans'
 import Analysis from './Analysis'
 import Search from './Search'
 import Tagging from './Tagging'
 
 const sampleTaggingRouter = createStackNavigator(
   {
-    recentScans: RecentScans,
     search: Search,
     analysis: Analysis,
     tagging: Tagging
@@ -16,7 +14,7 @@ const sampleTaggingRouter = createStackNavigator(
 
 sampleTaggingRouter.navigationOptions = ({ navigation }) => {
   return {
-    drawerLockMode: (navigation.state.index > 1) ? 'locked-closed' : 'unlocked'
+    drawerLockMode: (navigation.state.index > 0) ? 'locked-closed' : 'unlocked'
   }
 }
 
