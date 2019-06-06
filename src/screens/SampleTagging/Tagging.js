@@ -1,5 +1,5 @@
 import React from 'react'
-import Store from '../../../store'
+import Store from '../../store'
 import { Container, Header, Left, Button, Icon, Body, Title, Subtitle, Right, Content, H3, List, ListItem, Text, Badge, ActionSheet } from 'native-base'
 import { StyleSheet } from 'react-native'
 

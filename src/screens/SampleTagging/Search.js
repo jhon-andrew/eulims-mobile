@@ -1,8 +1,8 @@
 import React from 'react'
-import Store from '../../../store'
+import Store from '../../store'
 import { Container, Header, Left, Button, Body, Title, Right, Content, Form, Item, Input, Icon, List, ListItem, Text } from 'native-base'
 import { StyleSheet } from 'react-native'
-import API from '../../../api'
+import API from '../../api'
 
 const styles = StyleSheet.create({
   listHeader: {
