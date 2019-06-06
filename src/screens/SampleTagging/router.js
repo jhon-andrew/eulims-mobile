@@ -1,8 +1,8 @@
 import { createStackNavigator } from 'react-navigation'
-import RecentScans from './RecentScans'
-import Analysis from './Analysis/Analysis'
-import Search from './Analysis/Search'
-import Tagging from './Analysis/Tagging'
+import RecentScans from '../RecentScans'
+import Analysis from './Analysis'
+import Search from './Search'
+import Tagging from './Tagging'
 
 const sampleTaggingRouter = createStackNavigator(
   {
