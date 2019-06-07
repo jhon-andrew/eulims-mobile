@@ -2,7 +2,7 @@ import Store from './store'
 import { createSwitchNavigator, createStackNavigator, createDrawerNavigator, createAppContainer } from 'react-navigation'
 import Boot from './boot'
 import Auth from './screens/Auth/router'
-import CodeScanner from './screens/CodeScanner'
+import CodeScanner from './screens/CodeScanner.test'
 import RecentScans from './screens/RecentScans'
 import DrawerContent from './screens/DrawerContent'
 import sampleTaggingRouter from './screens/SampleTagging/router'
@@ -14,9 +14,9 @@ const rootNav = createSwitchNavigator({
   app: createStackNavigator(
     {
       codeScanner: CodeScanner,
-      recentScans: RecentScans,
       screens: createDrawerNavigator(
         {
+          recentScans: RecentScans,
           sampleTagging: sampleTaggingRouter,
           inventory: inventoryRouter
         },
@@ -26,7 +26,8 @@ const rootNav = createSwitchNavigator({
       )
     },
     { // `app` route config
-      initialRouteName: 'screens'
+      initialRouteName: 'screens',
+      defaultNavigationOptions: { header: null }
     }
   )
 })

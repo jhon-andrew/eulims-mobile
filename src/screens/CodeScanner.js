@@ -1,23 +1,27 @@
-import React from 'React'
+import React from 'react'
 import Store from '../store'
-import { Container, Grid, Row, Text, Button, Col, Spinner } from 'native-base'
 import { Permissions, Camera } from 'expo'
-import { StyleSheet, Dimensions, Vibration, Platform } from 'react-native'
-import theme from '../../native-base-theme/variables/eulims'
-import API from '../api'
+import { Dimensions, StyleSheet, Platform, Vibration } from 'react-native'
+import { Container, Header, Left, Button, Icon, Body, Title, Subtitle, Grid, Row, Col, Right, Spinner, Text } from 'native-base'
+import API from '../api';
 
+const frameOffset = 80
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#000000'
+  translucentBg: {
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  captions: {
-    color: '#ffffff',
-    alignSelf: 'center'
+  horizontalSpacer: {
+    width: frameOffset / 2,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)'
   },
-  scanner: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').width,
-    marginBottom: 8
+  frameHeight: {
+    height: Dimensions.get('window').width - frameOffset
+  },
+  frameWidth: {
+    width: Dimensions.get('window').width - frameOffset,
+    justifyContent: 'center'
   }
 })
 
@@ -25,80 +29,94 @@ class CodeScanner extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      cameraAccess: undefined,
-      ratio: undefined,
-      scannedData: undefined
+      cameraRatio: '16:9',
+      gettingAnalysis: false,
+      scannedData: undefined 
     }
   }
 
-  componentDidMount () {
-    const { navigation } = this.props
-    this.listeners = [
-      navigation.addListener('didFocus', async () => {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA)
-        this.setState({ cameraAccess: status })
-      }),
-      navigation.addListener('willBlur', payload => {
-        this.setState({ cameraAccess: undefined })
-      })
-    ]
-  }
+  async componentDidMount () {
+    await Permissions.askAsync(Permissions.CAMERA)
 
-  componentWillUnmount () {
-    this.listeners.forEach(listener => listener.remove())
+    if (Platform.OS === 'android' && this.camera) {
+      const ratios = await this.camera.getSupportedRatiosAsync()
+      this.setState({ cameraRatio: ratios[ratios.length - 1] })
+    }
   }
 
   async onScan ({ type, data }) {
-    const { navigation, store } = this.props
+    if (this.state.scannedData === data) return false
+
     Vibration.vibrate()
     this.setState({
-      cameraAccess: 'checking',
+      gettingAnalysis: true,
       scannedData: data
     })
 
-    let api = new API(store)
-    let analysis = await api.getAnalysis(data)
+    const { navigation, store } = this.props
+    const api = new API(store)
 
-    navigation.navigate('analysis', analysis)
+    switch (navigation.getParam('tagType')) {
+      case 'Sample Tag':
+        const analysis = await api.getAnalysis(data)
+        navigation.navigate('analysis', analysis)
+        break
+      case 'Product Code':
+        // const product = await api.getProducts(data)
+        // if (product.type === 'equipment') {
+        //   navigation.navigate('schedule', product)
+        // } else {
+        //   navigation.navigate('withdraw', product)
+        // }
+        console.log('TODO: Create a getProduct(code) API feature.')
+        break
+      default:
+        alert('Unknown `tagType`.')
+        break
+    }
   }
 
   render () {
-    const { cameraAccess, scannedData } = this.state
-    let content = undefined
-    if (!cameraAccess) {
-      content = (<Col><Spinner color={theme.brandPrimary} /></Col>)
-    } else if (cameraAccess === 'denied') {
-      content = (<Col><Text style={styles.captions}>App has been denied access to the camera.</Text></Col>)
-    } else if (cameraAccess === 'granted') {
-      content = (
-        <Col>
-          <Camera
-            ref={camera => (this.camera = camera)}
-            ratio="1:1"
-            onBarCodeScanned={this.onScan.bind(this)}
-            style={styles.scanner}
-          />
-          <Text style={styles.captions}>Please hold the tag near and steady...</Text>
-        </Col>
-      )
-    } else {
-      content = (
-        <Col>
-          <Spinner color={theme.brandPrimary} />
-          <Text style={styles.captions}>Checking analysis...</Text>
-          <Text style={styles.captions} note>{scannedData}</Text>
-        </Col>
-      )
-    }
+    const { navigation } = this.props
+    const { gettingAnalysis, scannedData } = this.state
 
     return (
-      <Container style={styles.container}>
-        <Grid>
-          <Row style={{alignItems: 'center'}}>
-            { content }
-          </Row>
-        </Grid>
-      </Container>
+      <Camera
+        style={{ flex: 1 }}
+        ref={camera => (this.camera = camera)}
+        ratio={this.state.cameraRatio}
+        onBarCodeScanned={this.onScan.bind(this)}
+      >
+        <Container style={{ backgroundColor: gettingAnalysis ? 'rgba(255, 255, 255, 0.95)' : 'transparent' }}>
+          <Header>
+            <Left>
+              <Button icon transparent onPress={() => navigation.pop()}>
+                <Icon type="MaterialCommunityIcons" name="arrow-left" />
+              </Button>
+            </Left>
+            <Body>
+              <Title>{ navigation.getParam('tagType', 'Bar/QR Code') }</Title>
+              <Subtitle>Scanner</Subtitle>
+            </Body>
+            <Right />
+          </Header>
+          <Grid>
+            <Row style={styles.translucentBg}>
+              <Text>Please hold the camera near and steady.</Text>
+            </Row>
+            <Row style={styles.frameHeight}>
+              <Col style={styles.horizontalSpacer}></Col>
+              <Col style={styles.frameWidth}>
+                { gettingAnalysis ? (<Spinner color="#0eb7f1" size={100} />) : null }
+              </Col>
+              <Col style={styles.horizontalSpacer}></Col>
+            </Row>
+            <Row style={styles.translucentBg}>
+              <Text>{ gettingAnalysis ? scannedData : 'Detecting...' }</Text>
+            </Row>
+          </Grid>
+        </Container>
+      </Camera>
     )
   }
 }

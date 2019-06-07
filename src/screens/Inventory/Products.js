@@ -39,7 +39,11 @@ class Products extends React.Component {
           <Body>
             <Title>Products</Title>
           </Body>
-          <Right />
+          <Right>
+            <Button transparent icon onPress={() => navigation.navigate('codeScanner', { tagType: 'Product Code' })}>
+              <Icon type="MaterialCommunityIcons" name="qrcode-scan" />
+            </Button>
+          </Right>
         </Header>
         <Content>
           <Form style={{ margin: 10 }}>

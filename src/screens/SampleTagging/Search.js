@@ -43,7 +43,7 @@ class Search extends React.Component {
             <Title>Search</Title>
           </Body>
           <Right>
-            <Button transparent icon onPress={() => navigation.navigate('codeScanner')}>
+            <Button transparent icon onPress={() => navigation.navigate('codeScanner', { tagType: 'Sample Tag' })}>
               <Icon type="MaterialCommunityIcons" name="qrcode-scan" />
             </Button>
           </Right>
