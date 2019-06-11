@@ -26,7 +26,7 @@ class Products extends React.Component {
 
   render () {
     const { navigation } = this.props
-    const { products } = this.state
+    const { products, search, sortBy } = this.state
 
     return (
       <Container>
@@ -40,6 +40,12 @@ class Products extends React.Component {
             <Title>Products</Title>
           </Body>
           <Right>
+            <Button transparent icon badge>
+              <Icon type="MaterialCommunityIcons" name="cart" />
+              {/* <Badge>
+                <Text>2</Text>
+              </Badge> */}
+            </Button>
             <Button transparent icon onPress={() => navigation.navigate('codeScanner', { tagType: 'Product Code' })}>
               <Icon type="MaterialCommunityIcons" name="qrcode-scan" />
             </Button>
@@ -88,7 +94,6 @@ class Products extends React.Component {
 
             {/* Products List */}
             {this.state.products.filter(({ code, name, type }) => {
-              const { search, sortBy } = this.state
               let productCode = code.toLowerCase().startsWith(search.toLowerCase())
               let productName = name.toLowerCase().startsWith(search.toLowerCase())
               let sort = (sortBy === 'all') ? (type !== sortBy) : (type === sortBy)
@@ -103,9 +108,21 @@ class Products extends React.Component {
                   <Text note>{ product.name }</Text>
                 </Body>
                 <Right>
-                  <Badge>
-                    <Text note style={{ fontSize: 10 }}>{ product.type }</Text>
-                  </Badge>
+                  { sortBy === 'all' ? (
+                    <Badge>
+                      <Text note style={{ fontSize: 10 }}>{ product.type }</Text>
+                    </Badge>
+                  ) : null }
+                  { sortBy === 'consumable' ? (
+                    <Button onPress={() => navigation.navigate('entries', product)}>
+                      <Text>Order</Text>
+                    </Button>
+                  ) : null }
+                  { sortBy === 'equipment' ? (
+                    <Button>
+                      <Text>Schedule</Text>
+                    </Button>
+                  ) : null }
                 </Right>
               </ListItem>
             ))}
