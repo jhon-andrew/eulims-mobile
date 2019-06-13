@@ -9,4 +9,6 @@ const initialState = {
   cart: []
 }
 
-export default createConnectedStore(initialState, effects)
+const Store = createConnectedStore(initialState, effects)
+
+export default Store

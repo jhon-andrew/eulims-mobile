@@ -73,5 +73,13 @@ export default class API {
   // Get Products
   getProducts = () => this.get('/products')
 
+  // Get Entries
   getEntries = (productId) => this.get('/entries', { productId })
+
+  // Withdraw Cart
+  withdraw = (entries) => this.post('/withdraw', { entries: entries.map(entry => ({
+    id: entry.id,
+    price: entry.price,
+    quantity: entry.quantity
+  })) })
 }

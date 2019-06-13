@@ -40,11 +40,13 @@ class Products extends React.Component {
             <Title>Products</Title>
           </Body>
           <Right>
-            <Button transparent icon badge>
+            <Button transparent icon badge={store.get('cart')} onPress={() => navigation.navigate('cart')}>
               <Icon type="MaterialCommunityIcons" name="cart" />
-              <Badge>
-                <Text>{ store.get('cart').length }</Text>
-              </Badge>
+              { store.get('cart').length > 0 ? (
+                <Badge>
+                  <Text>{ store.get('cart').length }</Text>
+                </Badge>
+              ) : null}
             </Button>
             <Button transparent icon onPress={() => navigation.navigate('codeScanner', { tagType: 'Product Code' })}>
               <Icon type="MaterialCommunityIcons" name="qrcode-scan" />

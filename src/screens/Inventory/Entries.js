@@ -5,12 +5,6 @@ import { StyleSheet } from 'react-native'
 import API from '../../api';
 
 const styles = StyleSheet.create({
-  listLeft: {
-    marginLeft: 10,
-    marginTop: 23,
-    alignSelf: 'stretch',
-    justifyContent: 'flex-start'
-  },
   listRight: {
     alignSelf: 'stretch',
     justifyContent: 'flex-start'
@@ -52,17 +46,18 @@ class Entries extends React.Component {
   addToCart () {
     const { store, navigation } = this.props
     const { params } = navigation.state
+    const persistedCart = store.get('cart')
 
     let data = this.state.orders.filter(order => order.quantity !== '' && order.quantity > 0)
-    let storedCart = store.get('cart')
 
-    if (storedCart.length > 0) {
-      data.unshift(storedCart)
+    if (persistedCart.length > 0) {
+      data.unshift(...persistedCart)
     }
 
-    if (data.length > storedCart.length) {
+    if (data.length > persistedCart.length) {
       store.set('cart')(data)
-      Toast.show({ text: 'Order has been added to card.' })
+      Toast.show({ text: 'Order has been added to cart.'})
+      navigation.pop()
     }
   }
 
@@ -83,13 +78,9 @@ class Entries extends React.Component {
             <Title>{ params.code }</Title>
             <Subtitle numberOfLines={1} ellipsizeMode="tail">{ params.name }</Subtitle>
           </Body>
-          <Right>
-            <Button transparent icon onPress={this.addToCart.bind(this)}>
-              <Icon type="MaterialCommunityIcons" name="cart-plus" />
-            </Button>
-          </Right>
+          <Right />
         </Header>
-        <Content>
+        <Content padder>
           <List>
             {/* Loading Spinner */}
             { entries.length === 0 ? (
@@ -98,11 +89,11 @@ class Entries extends React.Component {
                   <Spinner color="gray" />
                 </Body>
               </ListItem>
-            ) : null}
+            ) : null }
 
             {/* Entries List */}
             { entries.map((entry, index) => (
-              <ListItem key={entry.id}>
+              <ListItem key={index}>
                 <Body>
                   <Text note>Expiration Date</Text>
                   <Text>{ entry.expiration }</Text>
@@ -139,6 +130,12 @@ class Entries extends React.Component {
               </ListItem>
             )) }
           </List>
+
+          { entries.length > 0 ? (
+            <Button block onPress={this.addToCart.bind(this)}>
+              <Text>Add to Cart</Text>
+            </Button>
+          ): null }
         </Content>
       </Container>
     )

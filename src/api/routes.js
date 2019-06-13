@@ -110,4 +110,19 @@ app.get('/entries', (req, res) => {
   } else res.json({ error: true, message: 'Invalid productId.' })
 })
 
+// Withdraw entries
+app.post('/withdraw', (req, res) => {
+  const { entries } = req.body
+
+  if (entries && entries.length > 0) {
+    let totalAmount = 0
+    entries.forEach(entry => (totalAmount += (entry.price & entry.quantity)))
+    res.json({
+      success: true,
+      message: `You have withdrawn ${entries.length} item${entries.length > 1 ? 's' : ''} with a total amount of ${totalAmount}.`,
+      ids: entries.map(entry => (entry.id))
+    })
+  } else res.json({ error: true, message: 'No items for withdrawal provided.' })
+})
+
 module.exports = app
