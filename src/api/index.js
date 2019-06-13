@@ -72,4 +72,6 @@ export default class API {
 
   // Get Products
   getProducts = () => this.get('/products')
+
+  getEntries = (productId) => this.get('/entries', { productId })
 }

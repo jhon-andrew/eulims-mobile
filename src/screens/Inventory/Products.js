@@ -25,7 +25,7 @@ class Products extends React.Component {
   }
 
   render () {
-    const { navigation } = this.props
+    const { navigation, store } = this.props
     const { products, search, sortBy } = this.state
 
     return (
@@ -42,9 +42,9 @@ class Products extends React.Component {
           <Right>
             <Button transparent icon badge>
               <Icon type="MaterialCommunityIcons" name="cart" />
-              {/* <Badge>
-                <Text>2</Text>
-              </Badge> */}
+              <Badge>
+                <Text>{ store.get('cart').length }</Text>
+              </Badge>
             </Button>
             <Button transparent icon onPress={() => navigation.navigate('codeScanner', { tagType: 'Product Code' })}>
               <Icon type="MaterialCommunityIcons" name="qrcode-scan" />
@@ -93,7 +93,7 @@ class Products extends React.Component {
             ) : null }
 
             {/* Products List */}
-            {this.state.products.filter(({ code, name, type }) => {
+            {products.filter(({ code, name, type }) => {
               let productCode = code.toLowerCase().startsWith(search.toLowerCase())
               let productName = name.toLowerCase().startsWith(search.toLowerCase())
               let sort = (sortBy === 'all') ? (type !== sortBy) : (type === sortBy)

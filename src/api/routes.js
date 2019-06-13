@@ -1,4 +1,4 @@
-const { random, commerce, image } = require('faker')
+const { random, commerce, image, date, company, lorem, finance } = require('faker')
 const express = require('express')
 const app = express.Router()
 
@@ -91,6 +91,23 @@ app.get('/products', (req, res) => {
     thumbnail: image.image(),
     type: random.arrayElement(['consumable', 'equipment'])
   })))
+})
+
+// Get entries data
+app.get('/entries', (req, res) => {
+  if (req.query.productId) {
+    res.json(
+      [...Array(random.number({ min: 1, max: 3 }))].map((entry, id) => ({
+        id,
+        expiration: date.future(),
+        supplier: company.companyName(),
+        description: lorem.sentence(),
+        content: `${random.number(9)} ${random.arrayElement(['Liters (L)', 'Mililiters (mL)', 'Kilograms (kg)', 'Grams (g)'])}`,
+        price: finance.amount(),
+        onhand: random.number(20)
+      }))
+    )
+  } else res.json({ error: true, message: 'Invalid productId.' })
 })
 
 module.exports = app
