@@ -121,7 +121,7 @@ class Products extends React.Component {
                     </Button>
                   ) : null }
                   { sortBy === 'equipment' ? (
-                    <Button>
+                    <Button onPress={() => navigation.navigate('schedule', product)}>
                       <Text>Schedule</Text>
                     </Button>
                   ) : null }

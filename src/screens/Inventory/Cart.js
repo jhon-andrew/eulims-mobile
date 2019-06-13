@@ -100,6 +100,13 @@ class Cart extends React.Component {
         </Header>
         <Content padder>
           <List>
+            { entries.length === 0 ? (
+              <ListItem>
+                <Body>
+                  <Text note style={{ textAlign: 'center' }}>Your cart is empty.</Text>
+                </Body>
+              </ListItem>
+            ) : null }
             {/* Entries List */}
             { entries.map((entry, index) => (
               <ListItem key={index}>

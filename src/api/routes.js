@@ -125,4 +125,16 @@ app.post('/withdraw', (req, res) => {
   } else res.json({ error: true, message: 'No items for withdrawal provided.' })
 })
 
+// Save Schedule
+app.post('/schedule', (req, res) => {
+  const { serviceType, startDate, endDate } = req.body
+
+  if (serviceType && startDate && endDate) {
+    res.json({
+      success: true,
+      message: 'Schedule has been saved.'
+    })
+  } else res.json({ error: true, message: 'Please fill all the required fields.' })
+})
+
 module.exports = app

@@ -82,4 +82,7 @@ export default class API {
     price: entry.price,
     quantity: entry.quantity
   })) })
+
+  // Save Schedule
+  saveSchedule = ({ serviceType, startDate, endDate }) => this.post('/schedule', { serviceType, startDate, endDate })
 }
