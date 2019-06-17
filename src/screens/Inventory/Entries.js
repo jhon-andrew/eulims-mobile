@@ -102,7 +102,7 @@ class Entries extends React.Component {
                   <Text>{ entry.supplier }</Text>
 
                   <Text note>{"\n"}Description</Text>
-                  <Text>{ entry.description || '&nbsp;' }</Text>
+                  <Text>{ entry.description || ' ' }</Text>
 
                   <Text note>{"\n"}Content</Text>
                   <Text>{ entry.content }</Text>

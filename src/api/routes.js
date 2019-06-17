@@ -5,11 +5,11 @@ const app = express.Router()
 // Dummy Data
 let token = 'W29iamVjdCBPYmplY3Rd'
 let user = {
-  email: 'anecbook@gmail.com',
+  email: 'testuser@email.com',
   password: '123456',
-  firstName: 'Jhon Andrew',
-  middleInitial: 'Q',
-  lastName: 'Baes',
+  firstName: 'Test',
+  middleInitial: 'X',
+  lastName: 'User',
   userType: 'Laboratory Manager'
 }
 
@@ -50,7 +50,7 @@ app.get('/user', (req, res) => {
 
 // Get sample code
 app.get('/samplecode', (req, res) => {
-  let sampleCodes = [{"sample_id":"5199","sample_code":"CHE-0865"},{"sample_id":"5210","sample_code":"CHE-0867"},{"sample_id":"5211","sample_code":"CHE-0866"},{"sample_id":"5212","sample_code":"CHE-0868"},{"sample_id":"5213","sample_code":"CHE-0869"},{"sample_id":"5214","sample_code":"CHE-0870"},{"sample_id":"5215","sample_code":"CHE-0871"},{"sample_id":"5216","sample_code":"CHE-0872"},{"sample_id":"5217","sample_code":"CHE-0873"},{"sample_id":"5218","sample_code":"CHE-0874"},{"sample_id":"5226","sample_code":"CHE-0875"},{"sample_id":"5228","sample_code":"CHE-0876"},{"sample_id":"5230","sample_code":"CHE-0877"},{"sample_id":"5231","sample_code":"CHE-0878"},{"sample_id":"5232","sample_code":"CHE-0879"},{"sample_id":"5233","sample_code":"CHE-0880"},{"sample_id":"5234","sample_code":"CHE-0881"},{"sample_id":"5235","sample_code":"CHE-0882"},{"sample_id":"5254","sample_code":"CHE-0883"},{"sample_id":"5255","sample_code":"CHE-0884"}]
+  let sampleCodes = [{'sample_id':'5199','sample_code':'CHE-0865'},{'sample_id':'5210','sample_code':'CHE-0867'},{'sample_id':'5211','sample_code':'CHE-0866'},{'sample_id':'5212','sample_code':'CHE-0868'},{'sample_id':'5213','sample_code':'CHE-0869'},{'sample_id':'5214','sample_code':'CHE-0870'},{'sample_id':'5215','sample_code':'CHE-0871'},{'sample_id':'5216','sample_code':'CHE-0872'},{'sample_id':'5217','sample_code':'CHE-0873'},{'sample_id':'5218','sample_code':'CHE-0874'},{'sample_id':'5226','sample_code':'CHE-0875'},{'sample_id':'5228','sample_code':'CHE-0876'},{'sample_id':'5230','sample_code':'CHE-0877'},{'sample_id':'5231','sample_code':'CHE-0878'},{'sample_id':'5232','sample_code':'CHE-0879'},{'sample_id':'5233','sample_code':'CHE-0880'},{'sample_id':'5234','sample_code':'CHE-0881'},{'sample_id':'5235','sample_code':'CHE-0882'},{'sample_id':'5254','sample_code':'CHE-0883'},{'sample_id':'5255','sample_code':'CHE-0884'}]
   res.json(sampleCodes.filter(result => result.text.startsWith(req.query.q)))
 })
 
@@ -84,13 +84,22 @@ app.get('/analysis', (req, res) => {
 
 // Get products data
 app.get('/products', (req, res) => {
-  res.json([...Array(20)].map((product, id) => ({
-    id,
-    code: commerce.product(),
-    name: commerce.productName(),
-    thumbnail: image.image(),
-    type: random.arrayElement(['consumable', 'equipment'])
-  })))
+  res.json([...Array(20)].map((product, id) => {
+    let type = random.arrayElement(['consumable', 'equipment'])
+    let code = random.number({ min: 101, max: 999 })
+    code = (type === 'equipment') ? random.arrayElement(['CHE-', 'MICRO-']) + code : code
+    let name = (type === 'equipment') ?
+      random.arrayElement(['COLORIMETER', 'NATURAL CONVECTION OVEN', 'SOXCAP 2047', 'DIGITAL BURETTE', 'KNIFETEC SAMPLE MILL', 'DESSICATOR CABINET', 'OVEN', 'FURNACE', 'ANALYTICAL SCALE', 'Distillation Unit', 'Digestion System with Scrubber', 'FUMEHOOD', 'Autoclave', 'Autoclave', 'Bacti-Cinerator', 'Balance', 'Balance', 'Balance (Mettler)', 'Biological Safety Cabinet', 'Colony Counter', 'Dehumidifier', 'Dispenser', 'E-Pure Water Purification System', 'Hot Plate with Magnetic Stirrer', 'Thermohygrometer', 'Incubator', 'Incubator (Lovibond)', 'Incubator', 'Microwave Oven', 'Microscope']) :
+      random.arrayElement(['Hydrochloric Acid', 'Acetic Acid', 'Nitric Acid', 'Perchloric Acid', 'Phosphoric Acid', 'Sulfuric Acid', 'Acetone', 'Ammonia', 'Anilin', 'Chloroform', 'Diethyl Ether', 'Ethyl Acetate', 'Ethyl Alcohol', 'Formaldehyde', 'Glycerol Anhydrous', 'Methyl Alcohol', '1-Octanol', 'Propanol', 'Petroleum Ether', 'Toluene', 'Heating Mantle', 'sample product 2', 'sample product 3', 'Tert-Butylmethylether', 'Bromocresol Purple', 'Salicylic Acid', 'Hexane', 'Methyl buyl Ether', 'Hydrogen Peroxide', 'Zinc Sulphate'])
+
+    return {
+      id,
+      code: code.toString(),
+      name,
+      thumbnail: `${req.protocol}://${req.hostname}:3000/uploads/products/no-image.png`,
+      type
+    }
+  }))
 })
 
 // Get entries data
@@ -100,8 +109,8 @@ app.get('/entries', (req, res) => {
       [...Array(random.number({ min: 1, max: 3 }))].map((entry, id) => ({
         id,
         expiration: date.future(),
-        supplier: company.companyName(),
-        description: lorem.sentence(),
+        supplier: random.arrayElement(['Elmar Marketing', 'Hamburg Trading', 'Chemline Scientific Corporation', 'Yana Chemodities, Inc.', 'Harnwell Chemicals Corp.']),
+        description: null,
         content: `${random.number(9)} ${random.arrayElement(['Liters (L)', 'Mililiters (mL)', 'Kilograms (kg)', 'Grams (g)'])}`,
         price: finance.amount(),
         onhand: random.number(20)

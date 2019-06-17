@@ -30,6 +30,7 @@ app.get('/builds', (req, res) => {
   res.redirect('https://expo.io/@jhon-andrew/eulims-mobile/builds')
 })
 
+app.use('/uploads/products', express.static(__dirname))
 app.use('/api/restapi', routes)
 
 // Start Server
