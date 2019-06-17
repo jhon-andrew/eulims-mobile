@@ -1,92 +1,88 @@
-import { AsyncStorage } from 'react-native'
 import { Toast } from 'native-base'
 import axios from 'axios'
 
-
+// API Toolkit
 export default class API {
-  constructor (server) {
+  constructor (store) {
+    this.store = store
     this.protocol = 'http:'
-    this.server = server
-    this.axios = null
-    this.token = null
-    this.getPrefServer()
+    this.server = store.get('prefServer')
+    this.token = store.get('token')
   }
 
-  async getPrefServer () {
-    this.server = this.server || await AsyncStorage.getItem('prefServer')
-    this.axios = axios.create({
-      baseURL: `${this.protocol}//${this.server}`,
+  get axios () {
+    let config = {
+      baseURL: `${this.protocol}//${this.server}/api/restapi`,
       responseType: 'json'
-    })
+    }
 
-    return this.server
+    if (this.token) {
+      config.headers = {
+        Authorization: `Bearer ${this.token}`
+      }
+    }
+
+    return axios.create(config)
   }
 
-  alertConnErr () {
-    Toast.show({
-      text: 'Connection error.',
-      buttonText: 'Okay',
-      duration: 3000
-    })
-  }
-
-  get token () {
-    return AsyncStorage.getItem('token')
-  }
-
-  async get (endpoint, params = {}) {
-    if (!this.server) await this.getPrefServer()
-    console.log('GET', this.server, endpoint, params)
+  get (endpoint, params = {}) {
+    console.log('[GET]:', this.server, endpoint)
     return this.axios.get(endpoint, { params })
-      .then(({ data }) => {
-        if (!data) this.alertConnErr()
-        return data
-      })
-      .catch(err => undefined)
-  }
-
-  async post (endpoint, data) {
-    if (!this.server) await this.getPrefServer()
-    console.log('POST', this.server, endpoint, data)
-    return this.axios.post(endpoint, data)
-      .then(({ data }) => {
-        if (!data) this.alertConnErr()
-        return data
-      })
-      .catch(err => undefined)
-  }
-}
-
-// Check Server Status
-export function CheckServer (server) {
-  return new API(server).get('/server-status')
-}
-
-// Check User
-export function CheckUser (token) {
-  let api = new API()
-  return api.get('/user', { token })
-}
-
-// Login Function
-export function Login (email, password) {
-  let api = new API()
-  return api.post('/login', { email, password })
-    .then(resp => {
-      return resp
+    .then(({ data }) => {
+      if (!data) console.log('ERROR:', data)
+      return data
     })
-}
+    .catch(err => undefined)
+  }
 
-// Get Sample Code
-export async function GetSampleCode(q) {
-  let api = new API()
-  let token = await api.token
-  return api.get('/samplecode', { q, token })
-}
+  post (endpoint, data) {
+    console.log('[POST]:', this.server, endpoint)
+    return this.axios.post(endpoint, data)
+    .then(({ data }) => {
+      if (!data) console.log('ERROR:', data)
+      return data
+    })
+    .catch(err => undefined)
+  }
 
-// Get Analysis
-export async function GetAnalysis(id) {
-  let api = new API()
-  let token = await api.token
-  return api.get('/analysis', { id, token })
+  // Check Server
+  checkServer (server) {
+    return axios.get(`${this.protocol}//${server}/api/restapi/server`)
+    .then(({ data }) => {
+      if (!data) console.log('Check Server ERROR:', data)
+      return data
+    })
+    .catch(err => {
+      console.log(err)
+      return undefined
+    })
+  }
+
+  // Check User
+  checkUser = () => this.get('/user')
+
+  // Login
+  login = (email, password) => this.post('/login', { email, password })
+
+  // Get Sample Code
+  getSampleCode = (query) => this.get('/samplecode', { q: query })
+
+  // Get Analysis
+  getAnalysis = (id) => this.get('/analysis', { id })
+
+  // Get Products
+  getProducts = () => this.get('/products')
+
+  // Get Entries
+  getEntries = (productId) => this.get('/entries', { productId })
+
+  // Withdraw Cart
+  withdraw = (entries) => this.post('/withdraw', { entries: entries.map(entry => ({
+    id: entry.id,
+    price: entry.price,
+    quantity: entry.quantity
+  })) })
+
+  // Save Schedule
+  saveSchedule = ({ serviceType, startDate, endDate }) => this.post('/schedule', { serviceType, startDate, endDate })
 }

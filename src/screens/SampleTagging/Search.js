@@ -1,8 +1,8 @@
 import React from 'react'
-import Store from '../../../store'
+import Store from '../../store'
 import { Container, Header, Left, Button, Body, Title, Right, Content, Form, Item, Input, Icon, List, ListItem, Text } from 'native-base'
 import { StyleSheet } from 'react-native'
-import { GetSampleCode } from '../../../api'
+import API from '../../api'
 
 const styles = StyleSheet.create({
   listHeader: {
@@ -23,7 +23,8 @@ class Search extends React.Component {
   }
 
   async search (searchTerm) {
-    let searchResults = (searchTerm.length >= 3) ? await GetSampleCode(searchTerm) : []
+    const api = new API(this.props.store)
+    let searchResults = (searchTerm.length >= 3) ? await api.getSampleCode(searchTerm) : []
     this.setState({ searchResults })
   }
 
@@ -34,7 +35,7 @@ class Search extends React.Component {
       <Container>
         <Header>
           <Left>
-            <Button transparent icon onPress={() => navigation.toggleDrawer()}>
+            <Button transparent icon onPress={navigation.toggleDrawer.bind(this)}>
               <Icon type="MaterialCommunityIcons" name="menu" />
             </Button>
           </Left>
@@ -42,7 +43,7 @@ class Search extends React.Component {
             <Title>Search</Title>
           </Body>
           <Right>
-            <Button transparent icon onPress={() => navigation.navigate('codeScanner')}>
+            <Button transparent icon onPress={() => navigation.navigate('codeScanner', { tagType: 'Sample Tag' })}>
               <Icon type="MaterialCommunityIcons" name="qrcode-scan" />
             </Button>
           </Right>
@@ -59,8 +60,8 @@ class Search extends React.Component {
               <Text>Results ({searchResults.length})</Text>
             </ListItem>
             { searchResults.map((result, index) => (
-              <ListItem key={index}>
-                <Text>{result.text}</Text>
+              <ListItem key={result.sample_id}>
+                <Text>{result.sample_code}</Text>
               </ListItem>
             )) }
           </List>

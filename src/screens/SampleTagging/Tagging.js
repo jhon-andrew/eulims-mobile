@@ -1,5 +1,5 @@
 import React from 'react'
-import Store from '../../../store'
+import Store from '../../store'
 import { Container, Header, Left, Button, Icon, Body, Title, Subtitle, Right, Content, H3, List, ListItem, Text, Badge, ActionSheet } from 'native-base'
 import { StyleSheet } from 'react-native'
 
@@ -41,8 +41,8 @@ class Tagging extends React.Component {
       <Container>
         <Header>
           <Left>
-            <Button transparent icon onPress={() => navigation.toggleDrawer()}>
-              <Icon type="MaterialCommunityIcons" name="menu" />
+            <Button transparent icon onPress={() => navigation.pop()}>
+              <Icon type="MaterialCommunityIcons" name="arrow-left" />
             </Button>
           </Left>
           <Body>

@@ -1,5 +1,5 @@
 import React from 'react'
-import Store from '../../../store'
+import Store from '../../store'
 import { Container, Header, Left, Button, Icon, Body, Title, Subtitle, Right, Content, List, ListItem, Text, Badge } from 'native-base'
 import { StyleSheet } from 'react-native'
 
@@ -39,7 +39,7 @@ class Analysis extends React.Component {
         status: 'pending'
       }
     ]
-    navigation.navigate('Tagging', test)
+    navigation.navigate('tagging', test)
   }
 
   render () {
@@ -50,8 +50,8 @@ class Analysis extends React.Component {
       <Container>
         <Header>
           <Left>
-            <Button transparent icon onPress={() => navigation.toggleDrawer()}>
-              <Icon type="MaterialCommunityIcons" name="menu" />
+            <Button transparent icon onPress={() => navigation.pop()}>
+              <Icon type="MaterialCommunityIcons" name="arrow-left" />
             </Button>
           </Left>
           <Body>
@@ -59,7 +59,7 @@ class Analysis extends React.Component {
             <Subtitle>{params.sampleCode}</Subtitle>
           </Body>
           <Right>
-            <Button transparent icon onPress={() => navigation.pop()}>
+            <Button transparent icon onPress={() => navigation.popToTop()}>
               <Icon type="MaterialCommunityIcons" name="magnify" />
             </Button>
           </Right>

@@ -1,39 +1,45 @@
 import React from 'react'
 import Store from './store'
 import { AppLoading } from 'expo'
+import API from './api'
 import { AsyncStorage } from 'react-native'
-import { CheckServer, CheckUser } from './api'
 
 class Boot extends React.Component {
   constructor (props) {
     super(props)
-    this.checkAuth = this.checkAuth.bind(this)
     this.checkAuth()
   }
 
   async checkAuth () {
-    // await AsyncStorage.clear() // TEMPORARY: Refresh AsyncStorage on every build
-
     let { navigation, store } = this.props
-    let prefServer = await AsyncStorage.getItem('prefServer')
-    let token = await AsyncStorage.getItem('token')
-    let servers = await AsyncStorage.getItem('servers')
+    let cached = {}
 
-    if (!servers) {
+    let keys = await AsyncStorage.getAllKeys()
+    let storage = await AsyncStorage.multiGet(keys)
+    storage.forEach(pair => {
+      cached[pair[0]] = JSON.parse(pair[1])
+    })
+
+    if (!cached.servers) {
       let Servers = require('./configs.json').servers
       store.set('servers')(Servers)
-    } else store.set('servers')(JSON.parse(servers))
+    } else store.set('servers')(cached.servers)
 
-    if (!prefServer || !token) return navigation.navigate('login')
-    store.set('prefServer')(prefServer)
+    if (!cached.prefServer || !cached.token) return navigation.navigate('login')
+    store.set('prefServer')(cached.prefServer)
 
-    let server = await CheckServer(prefServer)
+    let api = new API(store)
+
+    api.server = cached.prefServer
+    api.token = cached.token
+
+    let server = await api.checkServer(cached.prefServer)
     if (server && server.status === 'online') {
-      let user = await CheckUser(token)
+      let user = await api.checkUser(cached.token)
       if (user && user.token) {
         store.set('token')(user.token)
         store.set('user')(user.user)
-        return navigation.navigate('sampleTagging')
+        return navigation.navigate('app')
       } else return navigation.navigate('login', { message: user.message })
     } else return navigation.navigate('login', { message: 'Server is offline.' })
   }
