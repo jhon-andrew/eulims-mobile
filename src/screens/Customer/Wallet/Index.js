@@ -1,10 +1,35 @@
 import React from 'react'
 import Store from '../../../store'
 import { Text, Container, Content, Title, Subtitle, Header, Left, Right, Button, Card, CardItem, ListItem, Body, List, H1, Icon} from 'native-base'
+import API from '../../../api'
 
 class Index  extends React.Component {
+	constructor(props) {
+	  super(props)
+	  this.state = {
+	  	transactions: [] ,
+	  	detailedtransaction: []
+	  }
+	}
+
+	async componentDidMount () {
+		const { store } = this.props
+		const api = new API(store)
+		try {
+			transactions = await api.getWalletTransactions(50) //supply user id
+			detailedtransaction = await api.getDetailedTransactions(transactions.customerwallet_id)
+			this.setState({ transactions, detailedtransaction })
+			// this.setState({ transactions })
+			
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
 	render () {
 		const { navigation } = this.props
+		const { transactions, detailedtransaction } = this.state
+		console.log(detailedtransaction)
 		return (
 			<Container>
 				<Header>
@@ -20,27 +45,31 @@ class Index  extends React.Component {
 					<Right/>
 				</Header>
 				<Content padder>
-					<List>
-						<ListItem>
-							<H1>Balance : 10,000.00</H1>
-		          		</ListItem>
-	          		</List>
+					
+					<Text style={{fontSize: 24}}>Balance : {transactions.balance}</Text>
+					<Text note>Last Update : {transactions.date}</Text>
+		          		
 					<Card>
 						<CardItem header bordered>
 							<Text> Recent</Text>
 						</CardItem>
-						<CardItem bordered>
-							<Body>
-								<Text>"01-01-2019"</Text>
-		              			<Text note>Type and Amount</Text> 
-							</Body>
-						</CardItem>
-						<CardItem bordered>
-							<Body>
-								<Text>"02-20-2019"</Text>
-		              			<Text note>Type and Amount</Text> 
-							</Body>	
-						</CardItem>
+						{
+							detailedtransaction.map((record, index) => (
+								<CardItem itemDivider key={record.customertransaction_id}>
+									
+									<Left>
+										<Body>
+							                <Text note>{record.date} </Text>
+							                <Text>Amount: {record.amount}</Text>
+							                <Text note>Balance: {record.balance}</Text>
+						                </Body>
+						             </Left>
+						             <Right/>
+									
+					            </CardItem>
+
+							))
+						}
 						<CardItem footer bordered>
 							<Text style={{textAlign: 'center'}}> ***Nothing Follows***</Text>
 						</CardItem>

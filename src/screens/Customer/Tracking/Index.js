@@ -2,10 +2,31 @@ import React from 'react'
 import Store from '../../../store'
 import { StyleSheet } from 'react-native'
 import { Container, Content, Header, Footer, FooterTab, Body, Left, Button, Text, Icon, List, ListItem, Right, H1, Title} from 'native-base'
+import API from '../../../api'
 
 class Index  extends React.Component {
+	constructor(props) {
+	  super(props)
+	  this.state = {
+	  	mycustonRequest: []
+	  }
+	}
+
+	async componentDidMount () {
+		const { store } = this.props
+		const api = new API(store)
+		try {
+			mycustonRequest = await api.getOnRequests(50)
+			this.setState({ mycustonRequest })
+			
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
 	render () {
 		const { navigation } = this.props
+		const { mycustonRequest } = this.state
 		return (
 			<Container>
 				<Header>
@@ -21,36 +42,26 @@ class Index  extends React.Component {
 				</Header>
 				<Content>
 					<List>
-			            <ListItem itemDivider>
-			              <Left>
-			                <Text>Simon Mignolet</Text>
-			              </Left>
-			              <Right>
-			                <Button transparent onPress={() => navigation.navigate('tracks')}>
-								<Icon name="arrow-forward" />
-							</Button>
-			              </Right>
-			            </ListItem>
-			            <ListItem itemDivider>
-			             <Left>
-			                <Text>Nathaniel Clyne</Text>
-			              </Left>
-			              <Right>
-			                <Button transparent onPress={() => navigation.navigate('tracks')}>
-								<Icon name="arrow-forward" />
-							</Button>
-			              </Right>
-			            </ListItem>
-			            <ListItem itemDivider>
-			              <Left>
-			                <Text>Dejan Lovren</Text>
-			              </Left>
-			              <Right>
-			                <Button transparent onPress={() => navigation.navigate('tracks')}>
-								<Icon name="arrow-forward" />
-							</Button>
-			              </Right>
-			            </ListItem>
+						{
+							mycustonRequest.map((record, index) => (
+								<ListItem itemDivider key={record.request_id}>
+									
+									<Left>
+										<Body>
+							                <Text>{record.request_ref_num} </Text>
+							                <Text note>{record.request_datetime}</Text>
+						                </Body>
+						             </Left>
+						             <Right>
+						                <Button transparent onPress={() => navigation.navigate('tracks',{ request_id:record.request_id,request_ref_num:record.request_ref_num})}>
+											<Icon name="arrow-forward" />
+										</Button>
+						             </Right>
+									
+					            </ListItem>
+
+							))
+						}			            
 		          	</List>
 				</Content>
 				<Footer>

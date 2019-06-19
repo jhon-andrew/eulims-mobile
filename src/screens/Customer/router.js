@@ -4,12 +4,14 @@ import Tracking_Index from './Tracking/Index'
 import Tracking_Completed from './Tracking/Completed'
 import Tracking_Request from './Tracking/Tracks'
 import Wallet_Index from './Wallet/Index'
+import Wallet_transaction from './Wallet/Transactions'
 const CustomerRouter = createStackNavigator({
   booking: Booking_Index, //this should be routers
   tracking: Tracking_Index,
   completed: Tracking_Completed,
   wallet: Wallet_Index,
-  tracks: Tracking_Request
+  tracks: Tracking_Request,
+  detailedwallet: Wallet_transaction
 }, { defaultNavigationOptions: { header: null } })
 
 // CustomerRouter.navigationOptions = ({ navigation }) => ({
