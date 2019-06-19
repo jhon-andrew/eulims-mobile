@@ -73,6 +73,7 @@ export default class API {
   // Get Products
   getProducts = () => this.get('/products')
 
+
   // Get Customer ongoing Request
   getOnRequests = (id) => this.get('/getcustonreq', { id })
 
@@ -90,4 +91,18 @@ export default class API {
 
    // Get analyses
   getSamples = (id) => this.get('/getsamples', { id })
+
+  // Get Entries
+  getEntries = (productId) => this.get('/entries', { productId })
+
+  // Withdraw Cart
+  withdraw = (entries) => this.post('/withdraw', { entries: entries.map(entry => ({
+    id: entry.id,
+    price: entry.price,
+    quantity: entry.quantity
+  })) })
+
+  // Save Schedule
+  saveSchedule = ({ serviceType, startDate, endDate }) => this.post('/schedule', { serviceType, startDate, endDate })
+
 }

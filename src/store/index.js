@@ -5,7 +5,10 @@ const initialState = {
   prefServer: undefined,
   token: undefined,
   user: undefined,
-  servers: undefined
+  servers: undefined,
+  cart: []
 }
 
-export default createConnectedStore(initialState, effects)
+const Store = createConnectedStore(initialState, effects)
+
+export default Store

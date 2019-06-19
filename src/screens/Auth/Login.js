@@ -155,7 +155,7 @@ class LoginScreen extends React.Component {
                 { this.state.loggingIn ? (<Spinner color="#ffffff" />) : (<Text>Login</Text>) }
               </Button>
 
-              <Text style={styles.footer}>EULIMS Mobile v0.1 Beta</Text>
+              <Text style={styles.footer}>EULIMS Mobile v1.1 Beta</Text>
             </View>
           </Content>
         </LinearGradient>
