@@ -13,7 +13,7 @@ class Index  extends React.Component {
 	}
 
 	async componentDidMount () {
-		const { store } = this.props
+		const { store, navigation } = this.props
 		const api = new API(store)
 		try {
 			transactions = await api.getWalletTransactions(50) //supply user id
@@ -24,7 +24,21 @@ class Index  extends React.Component {
 		} catch (err) {
 			console.log(err)
 		}
+
+		this.focusListener = navigation.addListener("didFocus", async () => {
+	      // The screen is focused
+	      // Call any action
+
+	      	transactions = await api.getWalletTransactions(50) //supply user id
+			detailedtransaction = await api.getDetailedTransactions(transactions.customerwallet_id)
+			this.setState({ transactions, detailedtransaction })
+	    });
 	}
+
+	componentWillUnmount() {
+    	// Remove the event listener
+    	this.focusListener.remove();
+    }
 
 	render () {
 		const { navigation } = this.props

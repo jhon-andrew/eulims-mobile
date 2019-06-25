@@ -1,5 +1,6 @@
 import { createStackNavigator } from 'react-navigation'
 import Booking_Index from './Booking/Index'
+import Booking_Form from './Booking/Bookingform'
 import Tracking_Index from './Tracking/Index'
 import Tracking_Completed from './Tracking/Completed'
 import Tracking_Request from './Tracking/Tracks'
@@ -11,7 +12,8 @@ const CustomerRouter = createStackNavigator({
   completed: Tracking_Completed,
   wallet: Wallet_Index,
   tracks: Tracking_Request,
-  detailedwallet: Wallet_transaction
+  detailedwallet: Wallet_transaction,
+  bookingform:Booking_Form
 }, { defaultNavigationOptions: { header: null } })
 
 // CustomerRouter.navigationOptions = ({ navigation }) => ({

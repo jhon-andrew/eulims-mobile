@@ -73,7 +73,6 @@ export default class API {
   // Get Products
   getProducts = () => this.get('/products')
 
-
   // Get Customer ongoing Request
   getOnRequests = (id) => this.get('/getcustonreq', { id })
 
@@ -89,7 +88,7 @@ export default class API {
     // Get Customer bookings
   getBookings = (id) => this.get('/getbookings', { id })
 
-   // Get analyses
+   // Get samples
   getSamples = (id) => this.get('/getsamples', { id })
 
   // Get Entries
@@ -105,4 +104,10 @@ export default class API {
   // Save Schedule
   saveSchedule = ({ serviceType, startDate, endDate }) => this.post('/schedule', { serviceType, startDate, endDate })
 
+   // Get RSTLs
+  getRstl = () => this.get('/getrstl')
+
+  //post booking
+  setBooking = ({lab ,date, qty, desc, userid}) => this.post('/setbooking',{lab ,date, qty, desc, userid})
+  
 }

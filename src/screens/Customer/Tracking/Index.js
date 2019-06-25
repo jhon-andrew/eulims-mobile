@@ -44,7 +44,7 @@ class Index  extends React.Component {
 					<List>
 						{
 							mycustonRequest.map((record, index) => (
-								<ListItem itemDivider key={record.request_id}>
+								<ListItem itemDivider key={record.request_id} onPress={() => navigation.navigate('tracks',{ request_id:record.request_id,request_ref_num:record.request_ref_num})}>
 									
 									<Left>
 										<Body>
@@ -53,7 +53,7 @@ class Index  extends React.Component {
 						                </Body>
 						             </Left>
 						             <Right>
-						                <Button transparent onPress={() => navigation.navigate('tracks',{ request_id:record.request_id,request_ref_num:record.request_ref_num})}>
+						                <Button transparent>
 											<Icon name="arrow-forward" />
 										</Button>
 						             </Right>

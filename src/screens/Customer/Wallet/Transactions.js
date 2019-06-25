@@ -32,7 +32,7 @@ class Transactions  extends React.Component {
 			<Container>
 				<Header>
 					<Left>
-			            <Button transparent onPress={() => navigation.navigate('wallet')}>
+			            <Button transparent onPress={() => navigation.pop()}>
 			              <Icon name="arrow-back" />
 			            </Button>
 			        </Left>

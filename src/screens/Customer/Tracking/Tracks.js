@@ -1,6 +1,6 @@
 import React from 'react'
 import Store from '../../../store'
-import { Container, Header, Content, ListItem, CheckBox, Text, Body, Left, Right, Button, Icon, Title, Subtitle} from 'native-base';
+import { Container, Header, Content, ListItem, CheckBox, Text, Body, Left, Right, Button, Icon, Title, Subtitle, Row, Card, CardItem} from 'native-base';
 import API from '../../../api'
 
 class Tracks  extends React.Component {
@@ -26,6 +26,15 @@ class Tracks  extends React.Component {
 		}
 	}
 
+	iconfinder(value:boolean){
+		if(value){
+			return(<Icon type="MaterialCommunityIcons" name="checkbox-multiple-marked" />)
+		}
+		else{
+			return(<Icon type="MaterialCommunityIcons" name="checkbox-multiple-blank-outline" />)
+		}
+	}
+
 	render () {
 		const { navigation } = this.props
     	const request_id = navigation.getParam('request_id')
@@ -35,20 +44,32 @@ class Tracks  extends React.Component {
 			<Container>
 		        <Header>
 		        	<Left style={{flex:0}}>
-						<Button transparent onPress={() => navigation.navigate('tracking')}>
+						<Button transparent onPress={() => navigation.pop()}>
 							<Icon name="arrow-back" />
 						</Button>
 					</Left>
-					<Content>
-						<Title style={{alignItems:'center',flex:1}}>Tracks</Title>
+					<Body>
+						<Title style={{alignItems:'center'}}>Tracks</Title>
 						<Subtitle >({request_ref_num})</Subtitle>
-					</Content>
+					</Body>
+					<Right style={{flex:0}} />
 				</Header>
 		        <Content>
+		        
+		        <Card>
+		            <CardItem>
+		              <Body style={{alignItems:'center'}}>
+		                <Text><Icon type="MaterialCommunityIcons" name="checkbox-multiple-marked" />Completed 
+	      					  , <Icon type="MaterialCommunityIcons" name="checkbox-multiple-blank-outline" />Pending</Text>
+		              </Body>
+		            </CardItem>
+		        </Card>	
+  				
 		        {
 					tracks.map((record, index) => (
 			        <ListItem itemDivider key ={index}>
-		            	<CheckBox checked={(record.completed)?true:false} />
+		            	
+		            	{this.iconfinder(record.completed)}
 			            <Body>
 			              <Text>{record.sample_code}</Text>
 			              <Text note>{record.samplename}</Text>
