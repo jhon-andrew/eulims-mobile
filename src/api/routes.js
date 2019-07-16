@@ -10,7 +10,7 @@ let user = {
   firstName: 'Test',
   middleInitial: 'X',
   lastName: 'User',
-  userType: 'Laboratory Manager'
+  userType: 'customer'
 }
 
 // Server Status

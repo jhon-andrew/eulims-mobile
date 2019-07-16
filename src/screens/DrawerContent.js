@@ -17,10 +17,12 @@ const styles = StyleSheet.create({
 class DrawerContent extends React.Component {
   constructor (props) {
     super(props)
+    const user = this.props.store.get('user')
     this.state = {
       selectedRoute: 0,
       // Nav Drawer Routes
-      routes: [
+      routes: user.userType === 'analyst' ? [
+        // Analyst Routes
         {
           label: 'Recent Scans',
           screens: ['recentScans'],
@@ -35,6 +37,23 @@ class DrawerContent extends React.Component {
           label: 'Products',
           screens: ['products'],
           defaultScreen: 'products'
+        }
+      ] : [
+        // Customer Routes
+        {
+          label: 'Booking',
+          screens: ['booking', 'booking_form'],
+          defaultScreen: 'booking'
+        },
+        {
+          label: 'Tracking',
+          screens: ['tracking'],
+          defaultScreen: 'tracking'
+        },
+        {
+          label: 'Wallet',
+          screens: ['wallet'],
+          defaultScreen: 'wallet'
         }
       ],
       loggingOut: false

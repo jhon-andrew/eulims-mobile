@@ -20,7 +20,6 @@ class Index  extends React.Component {
 		try {
 			mybookings = await api.getBookings(423) //id
 			this.setState({ mybookings ,search: ""})
-			
 		} catch (err) {
 			console.log(err)
 		}

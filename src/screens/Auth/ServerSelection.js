@@ -87,7 +87,7 @@ class ServerSelection extends React.Component {
                     <Text note>{server.address}</Text>
                   </Body>
                   <Right>
-                    <Button small rounded danger icon onPress={this.removeServer.bind(this, index, server.name)}>
+                    <Button small rounded danger icon disabled={index < 2} onPress={this.removeServer.bind(this, index, server.name)}>
                       <Icon type="MaterialCommunityIcons" name="delete-forever" />
                     </Button>
                   </Right>

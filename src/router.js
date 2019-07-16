@@ -25,8 +25,8 @@ const rootNav = createSwitchNavigator({
 
         },
         { // `screens` route config
-          // contentComponent: DrawerContent
-          contentComponent: CustomerDrawer
+          contentComponent: DrawerContent
+          // contentComponent: CustomerDrawer
         }
       )
     },
