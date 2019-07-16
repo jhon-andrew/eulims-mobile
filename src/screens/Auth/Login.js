@@ -6,6 +6,8 @@ import { Container, Content, View, H2, Text, Form, Item, Input, Icon, Button, To
 import theme from '../../../native-base-theme/variables/eulims'
 import API from '../../api'
 
+const appPackage = require('../../../package.json')
+
 const styles = StyleSheet.create({
   verticallyCentered: {
     flexDirection: 'column',
@@ -108,7 +110,7 @@ class LoginScreen extends React.Component {
     if (login && login.token) {
       store.set('token')(login.token)
       store.set('user')(login.user)
-      return navigation.navigate('app')
+      return navigation.navigate(login.user.userType === 'customer' ? 'customer' : 'app')
     } else if (login && login.error) {
       Toast.show({
         text: login.message,
@@ -155,7 +157,7 @@ class LoginScreen extends React.Component {
                 { this.state.loggingIn ? (<Spinner color="#ffffff" />) : (<Text>Login</Text>) }
               </Button>
 
-              <Text style={styles.footer}>EULIMS Mobile v1.1 Beta</Text>
+              <Text style={styles.footer}>EULIMS Mobile v{appPackage.version}</Text>
             </View>
           </Content>
         </LinearGradient>

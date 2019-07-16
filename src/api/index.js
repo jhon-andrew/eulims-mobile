@@ -73,6 +73,24 @@ export default class API {
   // Get Products
   getProducts = () => this.get('/products')
 
+  // Get Customer ongoing Request
+  getOnRequests = (id) => this.get('/getcustonreq', { id })
+
+    // Get Customer completed Request
+  getComRequests = (id) => this.get('/getcustcomreq', { id })
+
+   // Get Customer wallet
+  getWalletTransactions = (id) => this.get('/getcustomerwallet', { id })
+
+  // Get Customer wallet transactions
+  getDetailedTransactions = (id) => this.get('/getwallettransaction', { id })
+
+    // Get Customer bookings
+  getBookings = (id) => this.get('/getbookings', { id })
+
+   // Get samples
+  getSamples = (id) => this.get('/getsamples', { id })
+
   // Get Entries
   getEntries = (productId) => this.get('/entries', { productId })
 
@@ -85,4 +103,11 @@ export default class API {
 
   // Save Schedule
   saveSchedule = ({ serviceType, startDate, endDate }) => this.post('/schedule', { serviceType, startDate, endDate })
+
+   // Get RSTLs
+  getRstl = () => this.get('/getrstl')
+
+  //post booking
+  setBooking = ({lab ,date, qty, desc, userid}) => this.post('/setbooking',{lab ,date, qty, desc, userid})
+  
 }
