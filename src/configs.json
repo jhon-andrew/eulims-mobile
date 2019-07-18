@@ -2,7 +2,7 @@
   "servers": [
     {
       "name": "Customers",
-      "address": "ulims.onelab.ph"
+      "address": "ulimsportal.onelab.ph"
     },
     {
       "name": "Local",
