@@ -18,7 +18,6 @@ class Index  extends React.Component {
 		try {
 			mycustonRequest = await api.getOnRequests(50)
 			this.setState({ mycustonRequest })
-			
 		} catch (err) {
 			console.log(err)
 		}
@@ -31,51 +30,47 @@ class Index  extends React.Component {
 			<Container>
 				<Header>
 					<Left>
-			            <Button transparent icon onPress={navigation.toggleDrawer.bind(this)}>
-			              <Icon type="MaterialCommunityIcons" name="menu" />
-			            </Button>
-			        </Left>
+            <Button transparent icon onPress={navigation.toggleDrawer.bind(this)}>
+              <Icon type="MaterialCommunityIcons" name="menu" />
+            </Button>
+          </Left>
 					<Body>
 						<Title style={{textAlign: 'center'}}>Ongoing Requests</Title>
 					</Body>
-					
 				</Header>
 				<Content>
 					<List>
 						{
 							mycustonRequest.map((record, index) => (
 								<ListItem itemDivider key={record.request_id} onPress={() => navigation.navigate('tracks',{ request_id:record.request_id,request_ref_num:record.request_ref_num})}>
-									
 									<Left>
 										<Body>
-							                <Text>{record.request_ref_num} </Text>
-							                <Text note>{record.request_datetime}</Text>
-						                </Body>
-						             </Left>
-						             <Right>
-						                <Button transparent>
+                      <Text>{record.request_ref_num} </Text>
+                      <Text note>{record.request_datetime}</Text>
+                    </Body>
+                  </Left>
+                  <Right>
+                    <Button transparent>
 											<Icon name="arrow-forward" />
 										</Button>
-						             </Right>
-									
-					            </ListItem>
-
+                  </Right>
+                </ListItem>
 							))
 						}			            
-		          	</List>
+          </List>
 				</Content>
 				<Footer>
-		          <FooterTab>
-		            <Button vertical active>
-		              <Icon type="MaterialCommunityIcons" name="buffer" />
-		              <Text>Ongoing</Text>
-		            </Button>
-		            <Button vertical onPress={() => navigation.navigate('completed')}>
-		              <Icon type="MaterialCommunityIcons" name="check-outline" />
-		              <Text>Completed</Text>
-		            </Button>
-		          </FooterTab>
-		        </Footer>
+          <FooterTab>
+            <Button vertical active>
+              <Icon type="MaterialCommunityIcons" name="buffer" />
+              <Text>Ongoing</Text>
+            </Button>
+            <Button vertical onPress={() => navigation.navigate('completed')}>
+              <Icon type="MaterialCommunityIcons" name="check-outline" />
+              <Text>Completed</Text>
+            </Button>
+          </FooterTab>
+        </Footer>
 			</Container>
 		)
 	}

@@ -19,7 +19,6 @@ class Transactions  extends React.Component {
 		try {
 			transactions = await api.getDetailedTransactions(wallet_id)
 			this.setState({ transactions })
-			
 		} catch (err) {
 			console.log(err)
 		}
@@ -27,15 +26,16 @@ class Transactions  extends React.Component {
 
 	render () {
 		const { navigation } = this.props
-		const { transactions } = this.state
+    const { transactions } = this.state
+
 		return (
 			<Container>
 				<Header>
 					<Left>
-			            <Button transparent onPress={() => navigation.pop()}>
-			              <Icon name="arrow-back" />
-			            </Button>
-			        </Left>
+            <Button transparent onPress={() => navigation.pop()}>
+              <Icon name="arrow-back" />
+            </Button>
+          </Left>
 					<Body>
 						<Title style={{alignItems:'center',flex:1}}>Wallet</Title>
 						<Subtitle>Transaction Info</Subtitle>
@@ -47,22 +47,19 @@ class Transactions  extends React.Component {
 						<CardItem header bordered>
 							<Text> Recent</Text>
 						</CardItem>
-						{
-							transactions.map((record, index) => (
-								<CardItem bordered key={record.customertransaction_id}>
-									<Left>
-										<Body>
-										<Text>{record.date}</Text>
-										<Text>{record.balance}</Text>
-				              			<Text note>{record.amount}</Text> 
-										</Body>
-									</Left>
-								</CardItem>
-							))
-						}	
-						
+						{ transactions.map((record, index) => (
+              <CardItem bordered key={record.customertransaction_id}>
+                <Left>
+                  <Body>
+                    <Text>{record.date}</Text>
+                    <Text>{record.balance}</Text>
+                    <Text note>{record.amount}</Text>
+                  </Body>
+                </Left>
+              </CardItem>
+						)) }
 						<CardItem footer bordered>
-							<Text style={{textAlign: 'center'}}> ***Nothing Follows***</Text>
+							<Text style={{textAlign: 'center'}}>***Nothing Follows***</Text>
 						</CardItem>
 					</Card> 
 				</Content>
