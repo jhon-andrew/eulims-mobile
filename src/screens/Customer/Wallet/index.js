@@ -16,7 +16,7 @@ class Index  extends React.Component {
 		const { store, navigation } = this.props
 		const api = new API(store)
 		try {
-			transactions = await api.getWalletTransactions(50) //supply user id
+			transactions = await api.getWalletTransactions() //supply user id
 			detailedtransaction = await api.getDetailedTransactions(transactions.customerwallet_id)
 			this.setState({ transactions, detailedtransaction })
 			// this.setState({ transactions })
@@ -27,7 +27,7 @@ class Index  extends React.Component {
 		this.focusListener = navigation.addListener('didFocus', async () => {
       // The screen is focused
       // Call any action
-      transactions = await api.getWalletTransactions(50) //supply user id
+      transactions = await api.getWalletTransactions() //supply user id
 			detailedtransaction = await api.getDetailedTransactions(transactions.customerwallet_id)
 			this.setState({ transactions, detailedtransaction })
     })

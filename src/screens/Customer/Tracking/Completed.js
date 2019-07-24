@@ -16,7 +16,7 @@ class Completed  extends React.Component {
 		const { store } = this.props
 		const api = new API(store)
 		try {
-			mycustcomRequest = await api.getComRequests(50)
+			mycustcomRequest = await api.getComRequests()
 			this.setState({ mycustcomRequest })
 		} catch (err) {
 			console.log(err)

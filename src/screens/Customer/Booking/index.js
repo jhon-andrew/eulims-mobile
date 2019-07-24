@@ -17,7 +17,7 @@ class Index extends React.Component {
 		const { store, navigation} = this.props
 		const api = new API(store)
 		try {
-			mybookings = await api.getBookings(423) //id
+			mybookings = await api.getBookings() //id
 			this.setState({ mybookings ,search: ""})
 		} catch (err) {
 			console.log(err)
@@ -26,7 +26,7 @@ class Index extends React.Component {
 		this.focusListener = navigation.addListener("didFocus", async () => {
       // The screen is focused
       // Call any action
-      mybookings = await api.getBookings(423) //id
+      mybookings = await api.getBookings() //id
 			this.setState({ mybookings ,search: ""})
     })
 	}

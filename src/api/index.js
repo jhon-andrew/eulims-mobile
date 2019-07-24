@@ -76,19 +76,19 @@ export default class API {
   getProducts = () => this.get('/getproducts')
 
   // Get Customer ongoing Request
-  getOnRequests = (id) => this.get('/getcustonreq', { id })
+  getOnRequests = () => this.get('/getcustonreq')
 
   // Get Customer completed Request
-  getComRequests = (id) => this.get('/getcustcomreq', { id })
+  getComRequests = () => this.get('/getcustcomreq')
 
   // Get Customer wallet
-  getWalletTransactions = (id) => this.get('/getcustomerwallet', { id })
+  getWalletTransactions = () => this.get('/getcustomerwallet')
 
   // Get Customer wallet transactions
   getDetailedTransactions = (id) => this.get('/getwallettransaction', { id })
 
   // Get Customer bookings
-  getBookings = (id) => this.get('/getbookings', { id })
+  getBookings = () => this.get('/getbookings')
 
   // Get samples
   getSamples = (id) => this.get('/getsamples', { id })

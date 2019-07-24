@@ -16,7 +16,7 @@ class Index  extends React.Component {
 		const { store } = this.props
 		const api = new API(store)
 		try {
-			mycustonRequest = await api.getOnRequests(50)
+			mycustonRequest = await api.getOnRequests()
 			this.setState({ mycustonRequest })
 		} catch (err) {
 			console.log(err)
