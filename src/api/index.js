@@ -5,7 +5,7 @@ import axios from 'axios'
 export default class API {
   constructor (store) {
     this.store = store
-    this.protocol = 'http:'
+    this.protocol = `${store.get('prefProtocol')}:`
     this.server = store.get('prefServer')
     this.token = store.get('token')
   }
@@ -29,7 +29,8 @@ export default class API {
     console.log('[GET]:', this.server, endpoint)
     return this.axios.get(endpoint, { params })
     .then(({ data }) => {
-      if (!data) console.log('ERROR:', data)
+      if (!data) console.log('[ERROR]:', data)
+      else console.log('[RESP]:', data)
       return data
     })
     .catch(err => undefined)
@@ -39,7 +40,8 @@ export default class API {
     console.log('[POST]:', this.server, endpoint)
     return this.axios.post(endpoint, data)
     .then(({ data }) => {
-      if (!data) console.log('ERROR:', data)
+      if (!data) console.log('[ERROR]:', data)
+      else console.log('[RESP]:', data)
       return data
     })
     .catch(err => undefined)
@@ -71,28 +73,28 @@ export default class API {
   getAnalysis = (id) => this.get('/analysis', { id })
 
   // Get Products
-  getProducts = () => this.get('/products')
+  getProducts = () => this.get('/getproducts')
 
   // Get Customer ongoing Request
   getOnRequests = (id) => this.get('/getcustonreq', { id })
 
-    // Get Customer completed Request
+  // Get Customer completed Request
   getComRequests = (id) => this.get('/getcustcomreq', { id })
 
-   // Get Customer wallet
+  // Get Customer wallet
   getWalletTransactions = (id) => this.get('/getcustomerwallet', { id })
 
   // Get Customer wallet transactions
   getDetailedTransactions = (id) => this.get('/getwallettransaction', { id })
 
-    // Get Customer bookings
+  // Get Customer bookings
   getBookings = (id) => this.get('/getbookings', { id })
 
-   // Get samples
+  // Get samples
   getSamples = (id) => this.get('/getsamples', { id })
 
   // Get Entries
-  getEntries = (productId) => this.get('/entries', { productId })
+  getEntries = (product_id) => this.get('/getentries', { product_id })
 
   // Withdraw Cart
   withdraw = (entries) => this.post('/withdraw', { entries: entries.map(entry => ({
@@ -102,12 +104,11 @@ export default class API {
   })) })
 
   // Save Schedule
-  saveSchedule = ({ serviceType, startDate, endDate }) => this.post('/schedule', { serviceType, startDate, endDate })
+  saveSchedule = ({ servicetype_id /* 1: calibration, 2: maintenance, 3: usage */, startdate /* format: YYYY-MM-DD */, enddate /* format: YYYY-MM-DD */, requested_by /* === user.id */ }) => this.post('/schedule', { servicetype_id, startdate, enddate, requested_by })
 
    // Get RSTLs
   getRstl = () => this.get('/getrstl')
 
   //post booking
   setBooking = ({lab ,date, qty, desc, userid}) => this.post('/setbooking',{lab ,date, qty, desc, userid})
-  
 }

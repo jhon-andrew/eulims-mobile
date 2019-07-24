@@ -21,7 +21,9 @@ class Entries extends React.Component {
     this.state = {
       entries: [],
       errorQuantity: {},
-      orders: []
+      orders: [],
+      unitDef: ['g', 'kg', 'L', 'mL', 'unit'], // 1: grams (g), 2: kilograms (kg), 3: liters (L), 4: mililiters (mL), 5: units (equipment)
+      noEntries: false
     }
   }
 
@@ -29,8 +31,14 @@ class Entries extends React.Component {
     const { store, navigation } = this.props
     const { params } = navigation.state
     const api = new API(store)
-    const entries = await api.getEntries(params.id)
-    this.setState({ entries })
+    const entries = await api.getEntries(params.product_id)
+    this.setState({
+      entries: entries.map(entry => {
+        entry.unit = params.unit
+        return entry
+      }),
+      noEntries: (entries.length === 0)
+    })
   }
 
   changeQuantity (index, entry, quantity) {
@@ -63,7 +71,7 @@ class Entries extends React.Component {
 
   render () {
     const { navigation } = this.props
-    const { entries, errorQuantity } = this.state
+    const { entries, errorQuantity, unitDef, noEntries } = this.state
     const { params } = navigation.state
 
     return (
@@ -75,18 +83,27 @@ class Entries extends React.Component {
             </Button>
           </Left>
           <Body>
-            <Title>{ params.code }</Title>
-            <Subtitle numberOfLines={1} ellipsizeMode="tail">{ params.name }</Subtitle>
+            <Title>{ params.product_code }</Title>
+            <Subtitle numberOfLines={1} ellipsizeMode="tail">{ params.product_name }</Subtitle>
           </Body>
           <Right />
         </Header>
         <Content padder>
           <List>
             {/* Loading Spinner */}
-            { entries.length === 0 ? (
+            { entries.length === 0 && !noEntries ? (
               <ListItem>
                 <Body>
                   <Spinner color="gray" />
+                </Body>
+              </ListItem>
+            ) : null }
+
+            {/* No Entries */}
+            { noEntries ? (
+              <ListItem>
+                <Body>
+                  <Text>This product doesn't have any entry.</Text>
                 </Body>
               </ListItem>
             ) : null }
@@ -96,22 +113,22 @@ class Entries extends React.Component {
               <ListItem key={index}>
                 <Body>
                   <Text note>Expiration Date</Text>
-                  <Text>{ entry.expiration }</Text>
+                  <Text>{ entry.expiration_date }</Text>
 
-                  <Text note>{"\n"}Supplier</Text>
-                  <Text>{ entry.supplier }</Text>
+                  {/* <Text note>{"\n"}Supplier</Text>
+                  <Text>{ entry.supplier }</Text> */}
 
                   <Text note>{"\n"}Description</Text>
                   <Text>{ entry.description || ' ' }</Text>
 
                   <Text note>{"\n"}Content</Text>
-                  <Text>{ entry.content }</Text>
+                  <Text>{ entry.content }{ unitDef[params.unit - 1] }</Text>
 
                   <Text note>{"\n"}Price</Text>
-                  <Text>{ entry.price }</Text>
+                  <Text>{ entry.amount }</Text>
 
                   <Text note>{"\n"}Onhand</Text>
-                  <Text>{ entry.onhand }</Text>
+                  <Text>{ entry.quantity_onhand }</Text>
                 </Body>
                 <Right style={styles.listRight}>
                   <Form style={styles.formFix}>

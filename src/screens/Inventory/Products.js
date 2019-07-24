@@ -1,7 +1,8 @@
 import React from 'react'
 import Store from '../../store'
-import { Container, Header, Body, Title, Left, Button, Icon, Right, Content, List, ListItem, Text, Thumbnail, Form, Item, Input, Picker, Badge, Spinner } from 'native-base'
+import { Container, Header, Body, Title, Left, Button, Icon, Right, Content, List, ListItem, Text, Thumbnail, Form, Item, Input, Picker, Badge, Spinner, View, Row, Grid, Col } from 'native-base'
 import API from '../../api'
+import { FlatList } from 'react-native'
 
 class Products extends React.Component {
   constructor (props) {
@@ -15,18 +16,66 @@ class Products extends React.Component {
 
   async componentDidMount () {
     const api = new API(this.props.store)
-    this.setState({
-      products: await api.getProducts()
-    })
+    const products = await api.getProducts()
+    this.setState({ products })
   }
 
   changeSort (sortBy) {
     this.setState({ sortBy })
   }
 
+  rowKey (item, index) {
+    return item.product_id.toString()
+  }
+
+  renderProductRow ({ item: product }) {
+    const { store, navigation } = this.props
+    const { sortBy } = this.state
+
+    return (
+      <Row style={{ padding: 8 }} onPress={() => navigation.navigate('product', product)}>
+        <Col style={{ width: '16%' }}>
+          { !product.Image1 ? (
+            <Thumbnail square source={require('../../../assets/no-image.png')} />
+          ) : (
+            <Thumbnail square source={{ uri: `${store.get('prefProtocol')}://${store.get('prefServer')}/${product.Image1}` }} />
+          ) }
+        </Col>
+        <Col style={{ paddingLeft: 8 }}>
+          <Text>{ product.product_code.trim() }</Text>
+          <Text note>{ product.product_name.trim() }</Text>
+        </Col>
+        <Col style={{ width: '30%' }}>
+          { sortBy === 'all' ? (
+            <Badge style={{ alignSelf: 'flex-end' }}>
+              <Text note style={{ fontSize: 10 }}>{ product.producttype_id === 1 ? 'consumable' : 'equipment' }</Text>
+            </Badge>
+          ) : null }
+          { parseInt(sortBy) === 1 ? (
+            <Button style={{ alignSelf: 'flex-end' }} onPress={() => navigation.navigate('entries', product)}>
+              <Text>Order</Text>
+            </Button>
+          ) : null }
+          { parseInt(sortBy) === 2 ? (
+            <Button style={{ alignSelf: 'flex-end' }} onPress={() => navigation.navigate('schedule', product)}>
+              <Text>Schedule</Text>
+            </Button>
+          ) : null }
+        </Col>
+      </Row>
+    )
+  }
+
   render () {
     const { navigation, store } = this.props
     const { products, search, sortBy } = this.state
+    const filteredProducts = products.filter(({ product_code, product_name, producttype_id }) => {
+      producttype_id = parseInt(producttype_id)
+      let productCode = product_code.toLowerCase().startsWith(search.toLowerCase())
+      let productName = product_name.toLowerCase().startsWith(search.toLowerCase())
+      let sort = (sortBy === 'all') ? (producttype_id !== sortBy) : (producttype_id === parseInt(sortBy))
+      return (productCode || productName) && sort
+    })
 
     return (
       <Container>
@@ -64,7 +113,7 @@ class Products extends React.Component {
             <ListItem itemDivider>
               <Left>
                 <Text>
-                  Category
+                  Results ({ filteredProducts.length })
                 </Text>
               </Left>
               <Right>
@@ -78,8 +127,8 @@ class Products extends React.Component {
                       onValueChange={this.changeSort.bind(this)}
                     >
                       <Picker.Item label="All" value="all" />
-                      <Picker.Item label="Consumables" value="consumable" />
-                      <Picker.Item label="Equipment" value="equipment" />
+                      <Picker.Item label="Consumables" value="1" />
+                      <Picker.Item label="Equipment" value="2" />
                     </Picker>
                   </Item>
                 </Form>
@@ -93,42 +142,17 @@ class Products extends React.Component {
                 </Body>
               </ListItem>
             ) : null }
-
-            {/* Products List */}
-            {products.filter(({ code, name, type }) => {
-              let productCode = code.toLowerCase().startsWith(search.toLowerCase())
-              let productName = name.toLowerCase().startsWith(search.toLowerCase())
-              let sort = (sortBy === 'all') ? (type !== sortBy) : (type === sortBy)
-              return (productCode || productName) && sort
-            }).map(product => (
-              <ListItem key={product.id} thumbnail onPress={() => navigation.navigate('product', product)}>
-                <Left style={{ marginLeft: 10 }}>
-                  <Thumbnail square source={{ uri: product.thumbnail }} />
-                </Left>
-                <Body>
-                  <Text>{ product.code }</Text>
-                  <Text note>{ product.name }</Text>
-                </Body>
-                <Right>
-                  { sortBy === 'all' ? (
-                    <Badge>
-                      <Text note style={{ fontSize: 10 }}>{ product.type }</Text>
-                    </Badge>
-                  ) : null }
-                  { sortBy === 'consumable' ? (
-                    <Button onPress={() => navigation.navigate('entries', product)}>
-                      <Text>Order</Text>
-                    </Button>
-                  ) : null }
-                  { sortBy === 'equipment' ? (
-                    <Button onPress={() => navigation.navigate('schedule', product)}>
-                      <Text>Schedule</Text>
-                    </Button>
-                  ) : null }
-                </Right>
-              </ListItem>
-            ))}
           </List>
+          <Grid>
+            {/* Products List */}
+            <FlatList
+              initialNumToRender={10}
+              maxToRenderPerBatch={15}
+              data={filteredProducts}
+              keyExtractor={this.rowKey.bind(this)}
+              renderItem={this.renderProductRow.bind(this)}
+            />
+          </Grid>
         </Content>
       </Container>
     )

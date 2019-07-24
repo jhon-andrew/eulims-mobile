@@ -7,8 +7,10 @@ import { Permissions, ImagePicker } from 'expo'
 class Product extends React.Component {
   constructor (props) {
     super(props)
+    const { store } = props
     this.state = {
-      thumbnail: props.navigation.state.params.thumbnail
+      // thumbnail: props.navigation.state.params.thumbnail,
+      thumbnail: `${store.get('prefProtocol')}://${store.get('prefServer')}/${props.navigation.state.params.Image1}`
     }
   }
 
@@ -60,12 +62,12 @@ class Product extends React.Component {
           <Card>
             <CardItem>
               <Body>
-                <H3>{params.code}</H3>
-                <Text>{params.name}</Text>
+                <H3>{params.product_code}</H3>
+                <Text>{params.product_name}</Text>
               </Body>
             </CardItem>
             <CardItem cardBody>
-              <Image source={{ uri: thumbnail }} style={{ flex: 1, width: undefined, height: 220 }} />
+              <Image source={ params.Image1 ? { uri: thumbnail } : require('../../../assets/no-image.png')} style={{ flex: 1, width: undefined, height: 220 }} />
             </CardItem>
             <CardItem>
               <Button small onPress={this.changeThumbnail.bind(this)}>

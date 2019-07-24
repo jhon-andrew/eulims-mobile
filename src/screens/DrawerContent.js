@@ -21,7 +21,7 @@ class DrawerContent extends React.Component {
     this.state = {
       selectedRoute: 0,
       // Nav Drawer Routes
-      routes: user.userType === 'analyst' ? [
+      routes: user.userType !== 'customer' ? [
         // Analyst Routes
         {
           label: 'Recent Scans',
