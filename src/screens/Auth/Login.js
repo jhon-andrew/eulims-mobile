@@ -153,8 +153,12 @@ class LoginScreen extends React.Component {
                 </TouchableWithoutFeedback>
               </Form>
 
-              <Button block rounded style={{ marginVertical: 4 }} onPress={this.login.bind(this)} disabled={this.state.loggingIn}>
+              <Button block rounded style={{ marginVertical: 4, marginBottom: 8 }} onPress={this.login.bind(this)} disabled={this.state.loggingIn}>
                 { this.state.loggingIn ? (<Spinner color="#ffffff" />) : (<Text>Login</Text>) }
+              </Button>
+
+              <Button rounded outline block style={{ backgroundColor: '#57b1e5' }} onPress={() => navigation.navigate('customerRegistration')}>
+                <Text>Create a Customer Account</Text>
               </Button>
 
               <Text style={styles.footer}>EULIMS Mobile v{appPackage.version}</Text>
