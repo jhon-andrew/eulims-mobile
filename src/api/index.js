@@ -8,11 +8,12 @@ export default class API {
     this.protocol = `${store.get('prefProtocol')}:`
     this.server = store.get('prefServer')
     this.token = store.get('token')
+    this.role = store.get('role')
   }
 
   get axios () {
     let config = {
-      baseURL: `${this.protocol}//${this.server}/api/restapi`,
+      baseURL: `${this.protocol}//${this.server}/api/${this.role === 'Analyst' ? 'restapi' : 'restcustomer'}`,
       responseType: 'json'
     }
 
@@ -26,7 +27,7 @@ export default class API {
   }
 
   get (endpoint, params = {}) {
-    console.log('[GET]:', this.server, endpoint)
+    console.log('[GET]:', `${this.protocol}//${this.server}/api/${this.role === 'Analyst' ? 'restapi' : 'restcustomer'}`, endpoint)
     return this.axios.get(endpoint, { params })
     .then(({ data }) => {
       if (!data) console.log('[ERROR]:', data)
@@ -37,7 +38,7 @@ export default class API {
   }
 
   post (endpoint, data) {
-    console.log('[POST]:', this.server, endpoint)
+    console.log('[POST]:', `${this.protocol}//${this.server}/api/${this.role === 'Analyst' ? 'restapi' : 'restcustomer'}`, endpoint)
     return this.axios.post(endpoint, data)
     .then(({ data }) => {
       if (!data) console.log('[ERROR]:', data)

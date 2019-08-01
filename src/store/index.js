@@ -7,7 +7,8 @@ const initialState = {
   token: undefined,
   user: undefined,
   servers: undefined,
-  cart: []
+  cart: [],
+  role: undefined
 }
 
 const Store = createConnectedStore(initialState, effects)

@@ -2,7 +2,7 @@ import React from 'react'
 import Store from '../../store'
 import { SplashScreen, LinearGradient, Constants } from 'expo'
 import { StyleSheet, Dimensions, Keyboard, Image, TouchableWithoutFeedback } from 'react-native'
-import { Container, Content, View, H2, Text, Form, Item, Input, Icon, Button, Toast, Spinner } from 'native-base'
+import { Container, Content, View, H2, Text, Form, Item, Input, Icon, Button, Toast, Spinner, ActionSheet } from 'native-base'
 import theme from '../../../native-base-theme/variables/eulims'
 import API from '../../api'
 
@@ -91,6 +91,22 @@ class LoginScreen extends React.Component {
     })
   }
 
+  selectRole () {
+    const roles = ['Analyst', 'Customer', 'Cancel']
+    ActionSheet.show(
+      {
+        title: 'Please choose a role to login',
+        options: roles,
+        cancelButtonIndex: 2
+      },
+      role => {
+        if (role < (roles.length - 1)) {
+          this.props.store.set('role')(roles[role])
+        }
+      }
+    )
+  }
+
   async login () {
     const { email, password } = this.state
     const { store, navigation } = this.props
@@ -98,10 +114,11 @@ class LoginScreen extends React.Component {
     this.setState({
       emailError: !email,
       passwordError: !password,
-      prefServerError: !store.get('prefServer')
+      prefServerError: !store.get('prefServer'),
+      roleError: !store.get('role')
     })
 
-    if (!email || !password || !store.get('prefServer')) return false
+    if (!email || !password || !store.get('prefServer') || !store.get('role')) return false
 
     this.setState({ loggingIn: true })
     const api = new API(store)
@@ -151,15 +168,23 @@ class LoginScreen extends React.Component {
                     </Item>
                   </View>
                 </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={this.selectRole.bind(this)}>
+                  <View pointerEvents="box-only" style={{padding: 0}}>
+                    <Item rounded style={styles.formItem} error={this.state.roleError}>
+                      <Input placeholder="Role" autoCapitalize="none" editable={false} value={store.get('role')} />
+                      <Icon type="MaterialCommunityIcons" name="account-card-details" />
+                    </Item>
+                  </View>
+                </TouchableWithoutFeedback>
               </Form>
 
               <Button block rounded style={{ marginVertical: 4, marginBottom: 8 }} onPress={this.login.bind(this)} disabled={this.state.loggingIn}>
                 { this.state.loggingIn ? (<Spinner color="#ffffff" />) : (<Text>Login</Text>) }
               </Button>
 
-              <Button rounded outline block style={{ backgroundColor: '#57b1e5' }} onPress={() => navigation.navigate('customerRegistration')}>
+              {/* <Button rounded outline block style={{ backgroundColor: '#57b1e5' }} onPress={() => navigation.navigate('customerRegistration')}>
                 <Text>Create a Customer Account</Text>
-              </Button>
+              </Button> */}
 
               <Text style={styles.footer}>EULIMS Mobile v{appPackage.version}</Text>
             </View>
