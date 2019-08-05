@@ -127,13 +127,17 @@ class LoginScreen extends React.Component {
     if (login && login.token) {
       store.set('token')(login.token)
       store.set('user')(login.user)
-      return navigation.navigate(login.user.userType === 'customer' ? 'customer' : 'app')
-    } else if (login && login.error) {
+      return navigation.navigate(login.user.type === 'customer' ? 'customer' : 'app')
+    } else if (login && !login.success) {
       Toast.show({
         text: login.message,
         buttonText: 'Okay',
         duration: 3000
       })
+
+      if (login.activated === false) {
+        return navigation.navigate('customerRegistration')
+      }
     }
 
     this.setState({ loggingIn: false   })

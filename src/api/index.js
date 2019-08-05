@@ -9,11 +9,12 @@ export default class API {
     this.server = store.get('prefServer')
     this.token = store.get('token')
     this.role = store.get('role')
+    this.controller = this.role === 'Analyst' ? 'restapi' : 'restcustomer'
   }
 
   get axios () {
     let config = {
-      baseURL: `${this.protocol}//${this.server}/api/${this.role === 'Analyst' ? 'restapi' : 'restcustomer'}`,
+      baseURL: `${this.protocol}//${this.server}/api/${this.controller}`,
       responseType: 'json'
     }
 
@@ -27,7 +28,7 @@ export default class API {
   }
 
   get (endpoint, params = {}) {
-    console.log('[GET]:', `${this.protocol}//${this.server}/api/${this.role === 'Analyst' ? 'restapi' : 'restcustomer'}`, endpoint)
+    console.log('[GET]:', `${this.protocol}//${this.server}/api/${this.controller}${endpoint}`)
     return this.axios.get(endpoint, { params })
     .then(({ data }) => {
       if (!data) console.log('[ERROR]:', data)
@@ -38,7 +39,7 @@ export default class API {
   }
 
   post (endpoint, data) {
-    console.log('[POST]:', `${this.protocol}//${this.server}/api/${this.role === 'Analyst' ? 'restapi' : 'restcustomer'}`, endpoint)
+    console.log('[POST]:', `${this.protocol}//${this.server}/api/${this.controller}${endpoint}`)
     return this.axios.post(endpoint, data)
     .then(({ data }) => {
       if (!data) console.log('[ERROR]:', data)
@@ -50,7 +51,7 @@ export default class API {
 
   // Check Server
   checkServer (server) {
-    return axios.get(`${this.protocol}//${server}/api/restapi/server`)
+    return axios.get(`${this.protocol}//${server}/api/${this.controller}/server`)
     .then(({ data }) => {
       if (!data) console.log('Check Server ERROR:', data)
       return data
