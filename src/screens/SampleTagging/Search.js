@@ -24,7 +24,7 @@ class Search extends React.Component {
 
   async search (searchTerm) {
     const api = new API(this.props.store)
-    let searchResults = (searchTerm.length >= 3) ? await api.getSampleCode(searchTerm) : []
+    let searchResults = (searchTerm.length >= 3) ? (await api.getSampleCode(searchTerm)).sampleCodes : []
     this.setState({ searchResults })
   }
 
@@ -36,16 +36,16 @@ class Search extends React.Component {
   }
 
   rowKey (item, index) {
-    return item.product_id.toString()
+    return item.sample_id.toString()
   }
 
   renderSearchResult ({ item: result }) {
     const { navigation } = this.props
 
     return (
-      <Row onPress={this.navigateToAnalysis.bind(this, result.sample_code)}>
+      <ListItem>
         <Text>{result.sample_code}</Text>
-      </Row>
+      </ListItem>
     )
   }
 

@@ -25,13 +25,15 @@ class Boot extends React.Component {
       store.set('servers')(Servers)
     } else store.set('servers')(cached.servers)
 
-    if (!cached.prefServer || !cached.token) return navigation.navigate('login')
+    if (!cached.prefServer || !cached.token || !cached.role) return navigation.navigate('login')
     store.set('prefServer')(cached.prefServer)
+    store.set('role')(cached.role)
 
     let api = new API(store)
 
     api.server = cached.prefServer
     api.token = cached.token
+    api.role = cached.role
 
     let server = await api.checkServer(cached.prefServer)
     if (server && server.status === 'online') {

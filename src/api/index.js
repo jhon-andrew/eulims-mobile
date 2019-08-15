@@ -9,12 +9,11 @@ export default class API {
     this.server = store.get('prefServer')
     this.token = store.get('token')
     this.role = store.get('role')
-    this.controller = this.role === 'Analyst' ? 'restapi' : 'restcustomer'
   }
 
   get axios () {
     let config = {
-      baseURL: `${this.protocol}//${this.server}/api/${this.controller}`,
+      baseURL: `${this.protocol}//${this.server}/api`,
       responseType: 'json'
     }
 
@@ -28,8 +27,9 @@ export default class API {
   }
 
   get (endpoint, params = {}) {
-    console.log('[GET]:', `${this.protocol}//${this.server}/api/${this.controller}${endpoint}`)
-    return this.axios.get(endpoint, { params })
+    let controller = this.role === 'Analyst' ? 'restapi' : 'restcustomer'
+    console.log('[GET]:', `${this.protocol}//${this.server}/api/${controller}${endpoint}`)
+    return this.axios.get(controller + endpoint, { params })
     .then(({ data }) => {
       if (!data) console.log('[ERROR]:', data)
       else console.log('[RESP]:', data)
@@ -39,8 +39,9 @@ export default class API {
   }
 
   post (endpoint, data) {
-    console.log('[POST]:', `${this.protocol}//${this.server}/api/${this.controller}${endpoint}`)
-    return this.axios.post(endpoint, data)
+    let controller = this.role === 'Analyst' ? 'restapi' : 'restcustomer'
+    console.log('[POST]:', `${this.protocol}//${this.server}/api/${controller}${endpoint}`)
+    return this.axios.post(controller + endpoint, data)
     .then(({ data }) => {
       if (!data) console.log('[ERROR]:', data)
       else console.log('[RESP]:', data)
@@ -51,7 +52,8 @@ export default class API {
 
   // Check Server
   checkServer (server) {
-    return axios.get(`${this.protocol}//${server}/api/${this.controller}/server`)
+    let controller = this.role === 'Analyst' ? 'restapi' : 'restcustomer'
+    return axios.get(`${this.protocol}//${server}/api/${controller}/server`)
     .then(({ data }) => {
       if (!data) console.log('Check Server ERROR:', data)
       return data
@@ -69,7 +71,7 @@ export default class API {
   login = (email, password) => this.post('/login', { email, password })
 
   // Get Sample Code
-  getSampleCode = (query) => this.get('/samplecode', { q: query })
+  getSampleCode = samplecode => this.get('/samplecode', { samplecode })
 
   // Get Analysis
   getAnalysis = (id) => this.get('/analysis', { id })
