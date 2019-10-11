@@ -21,7 +21,6 @@ const rootNav = createSwitchNavigator({
           sampleTagging: sampleTaggingRouter,
           inventory: inventoryRouter,
           customer: customerRouter
-
         },
         { // `screens` route config
           contentComponent: DrawerContent

@@ -92,15 +92,15 @@ class LoginScreen extends React.Component {
   }
 
   selectRole () {
-    const roles = ['Analyst', 'Customer', 'Cancel']
+    const roles = ['Customer', 'Analyst', 'Top Management', 'Cancel']
     ActionSheet.show(
       {
         title: 'Please choose a role to login',
         options: roles,
-        cancelButtonIndex: 2
+        cancelButtonIndex: roles.indexOf('Cancel')
       },
       role => {
-        if (role < (roles.length - 1)) {
+        if (role !== roles.indexOf('Cancel')) {
           this.props.store.set('role')(roles[role])
         }
       }
@@ -127,7 +127,21 @@ class LoginScreen extends React.Component {
     if (login && login.token) {
       store.set('token')(login.token)
       store.set('user')(login.user)
-      return navigation.navigate(login.user.type === 'customer' ? 'customer' : 'app')
+
+      let proceedTo = null
+      switch (login.user.type) {
+        case 'customer':
+          proceedTo = 'customer'
+          break
+        case 'top-management':
+          proceedTo = 'top-management'
+          break
+        default:
+          proceedTo = 'app'
+          break
+      }
+
+      return navigation.navigate(proceedTo)
     } else if (login && !login.success) {
       Toast.show({
         text: login.message,
@@ -140,7 +154,7 @@ class LoginScreen extends React.Component {
       }
     }
 
-    this.setState({ loggingIn: false   })
+    this.setState({ loggingIn: false })
   }
 
   render () {
