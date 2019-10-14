@@ -125,6 +125,9 @@ class LoginScreen extends React.Component {
     const login = await api.login(email, password)
 
     if (login && login.token) {
+      // Emulate top-management login
+      // login.user.type = 'top-management'
+
       store.set('token')(login.token)
       store.set('user')(login.user)
 
@@ -134,7 +137,7 @@ class LoginScreen extends React.Component {
           proceedTo = 'customer'
           break
         case 'top-management':
-          proceedTo = 'top-management'
+          proceedTo = 'topManagement'
           break
         default:
           proceedTo = 'app'

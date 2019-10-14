@@ -38,6 +38,10 @@ class Boot extends React.Component {
     let server = await api.checkServer(cached.prefServer)
     if (server && server.status === 'online') {
       let user = await api.checkUser(cached.token)
+
+      // Emulate top-management login
+      // user.user.type = 'top-management'
+
       if (user && user.token) {
         store.set('token')(user.token)
         store.set('user')(user.user)
@@ -48,7 +52,7 @@ class Boot extends React.Component {
             proceedTo = 'customer'
             break
           case 'top-management':
-            proceedTo = 'top-management'
+            proceedTo = 'topManagement'
             break
           default:
             proceedTo = 'app'

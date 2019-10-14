@@ -27,9 +27,13 @@ export default class API {
   }
 
   get (endpoint, params = {}) {
-    let controller = this.role === 'Analyst' ? 'restapi' : 'restcustomer'
-    console.log('[GET]:', `${this.protocol}//${this.server}/api/${controller}${endpoint}`)
-    return this.axios.get(controller + endpoint, { params })
+    let controller = {
+      'Analyst': 'restapi',
+      'Customer': 'restcustomer',
+      'Top Management': 'restapi'
+    }
+    console.log('[GET]:', `${this.protocol}//${this.server}/api/${controller[this.role]}${endpoint}`)
+    return this.axios.get(controller[this.role] + endpoint, { params })
     .then(({ data }) => {
       if (!data) console.log('[ERROR]:', data)
       else console.log('[RESP]:', data)
@@ -39,9 +43,13 @@ export default class API {
   }
 
   post (endpoint, data) {
-    let controller = this.role === 'Analyst' ? 'restapi' : 'restcustomer'
-    console.log('[POST]:', `${this.protocol}//${this.server}/api/${controller}${endpoint}`)
-    return this.axios.post(controller + endpoint, data)
+    let controller = {
+      'Analyst': 'restapi',
+      'Customer': 'restcustomer',
+      'Top Management': 'restapi'
+    }
+    console.log('[POST]:', `${this.protocol}//${this.server}/api/${controller[this.role]}${endpoint}`)
+    return this.axios.post(controller[this.role] + endpoint, data)
     .then(({ data }) => {
       if (!data) console.log('[ERROR]:', data)
       else console.log('[RESP]:', data)
