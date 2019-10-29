@@ -20,7 +20,7 @@ class Entries extends React.Component {
     super(props)
     this.state = {
       entries: [],
-      errorQuantity: {},
+      errorQuantity: [],
       orders: [],
       unitDef: ['g', 'kg', 'L', 'mL', 'unit'], // 1: grams (g), 2: kilograms (kg), 3: liters (L), 4: mililiters (mL), 5: units (equipment)
       noEntries: false
@@ -42,13 +42,21 @@ class Entries extends React.Component {
   }
 
   changeQuantity (index, entry, quantity) {
-    let { orders } = this.state
+    let { orders, errorQuantity } = this.state
+
+    if (quantity > entry.quantity_onhand || quantity === '0') {
+      quantity = null
+      errorQuantity[index] = true
+    } else {
+      errorQuantity[index] = false
+    }
+
     orders[index] = {
       ...entry,
       quantity
     }
 
-    this.setState({ orders })
+    this.setState({ orders, errorQuantity })
   }
 
   addToCart () {
@@ -132,15 +140,12 @@ class Entries extends React.Component {
                 </Body>
                 <Right style={styles.listRight}>
                   <Form style={styles.formFix}>
-                    <Item error={errorQuantity[1]} floatingLabel>
-                      {
-                        /** TODO: Create a filter function that verify
-                          * the input is a number and is not more than
-                          * the stocks left.
-                        */
-                      }
+                    <Item error={errorQuantity[index]} floatingLabel>
                       <Label>Qty.</Label>
                       <Input keyboardType="numeric" onChangeText={this.changeQuantity.bind(this, index, entry)} />
+                      { errorQuantity[index] ? (
+                        <Icon type="MaterialCommunityIcons" name="alert-circle" />
+                      ) : null }
                     </Item>
                   </Form>
                 </Right>

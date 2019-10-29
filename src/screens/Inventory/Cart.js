@@ -50,7 +50,7 @@ class Cart extends React.Component {
     const entries = store.get('cart')
     let totalAmount = 0
 
-    entries.forEach(entry => (totalAmount += (entry.price * entry.quantity)))
+    entries.forEach(entry => (totalAmount += (entry.amount * entry.quantity)))
 
     Alert.alert(
       'Please confirm',

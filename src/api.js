@@ -111,11 +111,10 @@ export default class API {
   getEntries = (product_id) => this.get('/getentries', { product_id })
 
   // Withdraw Cart
-  withdraw = (entries) => this.post('/withdraw', { entries: entries.map(entry => ({
-    id: entry.id,
-    price: entry.price,
+  withdraw = (entries) => this.post('/withdraw', entries.map(entry => ({
+    id: entry.inventory_transactions_id,
     quantity: entry.quantity
-  })) })
+  })))
 
   // Save Schedule
   saveSchedule ({ servicetype_id /* 1: calibration, 2: maintenance, 3: usage */, startdate /* format: YYYY-MM-DD */, enddate /* format: YYYY-MM-DD */, product_id }) {
