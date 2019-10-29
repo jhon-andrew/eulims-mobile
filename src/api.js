@@ -33,6 +33,7 @@ export default class API {
       'Top Management': 'restapi'
     }
     console.log('[GET]:', `${this.protocol}//${this.server}/api/${controller[this.role]}${endpoint}`)
+    console.log('[PAYLOAD]:', params)
     return this.axios.get(controller[this.role] + endpoint, { params })
     .then(({ data }) => {
       if (!data) console.log('[ERROR]:', data)
@@ -49,6 +50,7 @@ export default class API {
       'Top Management': 'restapi'
     }
     console.log('[POST]:', `${this.protocol}//${this.server}/api/${controller[this.role]}${endpoint}`)
+    console.log('[PAYLOAD]:', data)
     return this.axios.post(controller[this.role] + endpoint, data)
     .then(({ data }) => {
       if (!data) console.log('[ERROR]:', data)
@@ -116,7 +118,18 @@ export default class API {
   })) })
 
   // Save Schedule
-  saveSchedule = ({ servicetype_id /* 1: calibration, 2: maintenance, 3: usage */, startdate /* format: YYYY-MM-DD */, enddate /* format: YYYY-MM-DD */, requested_by /* === user.id */ }) => this.post('/schedule', { servicetype_id, startdate, enddate, requested_by })
+  saveSchedule ({ servicetype_id /* 1: calibration, 2: maintenance, 3: usage */, startdate /* format: YYYY-MM-DD */, enddate /* format: YYYY-MM-DD */, product_id }) {
+    let toJSONLocal = date => {
+      let local = new Date(date)
+      local.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+      return local.toJSON().slice(0, 10)
+    }
+
+    startdate = toJSONLocal(startdate)
+    enddate = toJSONLocal(enddate)
+
+    return this.post('/setschedule', { servicetype_id, startdate, enddate, product_id })
+  }
 
    // Get RSTLs
   getRstl = () => this.get('/getrstl')

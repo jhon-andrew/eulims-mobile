@@ -16,10 +16,12 @@ const styles = StyleSheet.create({
 class Schedule extends React.Component {
   constructor (props) {
     super(props)
+    const { store, navigation } = this.props
     this.state = {
       startdate: undefined,
       enddate: undefined,
-      servicetype_id: undefined
+      servicetype_id: undefined,
+      product_id: navigation.state.params.product_id
     }
   }
 
