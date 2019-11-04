@@ -43,7 +43,7 @@ class Search extends React.Component {
     const { navigation } = this.props
 
     return (
-      <ListItem>
+      <ListItem onPress={this.navigateToAnalysis.bind(this, result.sample_code)}>
         <Text>{result.sample_code}</Text>
       </ListItem>
     )

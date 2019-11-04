@@ -62,13 +62,8 @@ class CodeScanner extends React.Component {
         navigation.navigate('analysis', analysis)
         break
       case 'Product Code':
-        // const product = await api.getProducts(data)
-        // if (product.type === 'equipment') {
-        //   navigation.navigate('schedule', product)
-        // } else {
-        //   navigation.navigate('withdraw', product)
-        // }
-        console.log('TODO: Create a getProduct(code) API feature.')
+        const product = await api.getProduct(data)
+        navigation.navigate(product.producttype_id === 1 ? 'entries' : 'schedule', product)
         break
       default:
         alert('Unknown `tagType`.')

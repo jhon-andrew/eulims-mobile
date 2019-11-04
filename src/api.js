@@ -89,6 +89,9 @@ export default class API {
   // Get Products
   getProducts = () => this.get('/getproducts')
 
+  // Get Specific Product
+  getProduct = productcode => this.get('/getproduct', { productcode })
+
   // Get Customer ongoing Request
   getOnRequests = () => this.get('/getcustonreq')
 
