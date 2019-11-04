@@ -1,8 +1,21 @@
+import { createConnectedStore } from 'undux'
 import { AsyncStorage } from 'react-native'
 
-// AsyncStorage.clear() // FOR DEBUGGING PURPOSES ONLY
+AsyncStorage.clear() // FOR DEBUGGING PURPOSES ONLY
 
-export default async function (store) {
+// Initial State
+const initialState = {
+  prefProtocol: 'http',
+  prefServer: undefined,
+  token: undefined,
+  user: undefined,
+  servers: undefined,
+  cart: [],
+  role: undefined
+}
+
+// Store Effects
+const effects = async (store) => {
   // Restore persisted app states
   const persistedStates = await AsyncStorage.getAllKeys()
 
@@ -21,3 +34,5 @@ export default async function (store) {
 
   return store
 }
+
+export default createConnectedStore(initialState, effects)
