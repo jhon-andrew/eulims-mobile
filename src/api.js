@@ -62,8 +62,12 @@ export default class API {
 
   // Check Server
   checkServer (server) {
-    let controller = this.role === 'Analyst' ? 'restapi' : 'restcustomer'
-    return axios.get(`${this.protocol}//${server}/api/${controller}/server`)
+    let controller = {
+      'Analyst': 'restapi',
+      'Customer': 'restcustomer',
+      'Top Management': 'restapi'
+    }
+    return axios.get(`${this.protocol}//${server}/api/${controller[this.role]}/server`)
     .then(({ data }) => {
       if (!data) console.log('Check Server ERROR:', data)
       return data
