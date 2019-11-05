@@ -79,6 +79,9 @@ class LoginScreen extends React.Component {
         duration: 3000
       })
     }
+
+    // TEMPORARY. As other roles are not yet polished.
+    store.set('role')('Analyst')
   }
 
   componentWillUnmount () {
@@ -191,14 +194,14 @@ class LoginScreen extends React.Component {
                     </Item>
                   </View>
                 </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback onPress={this.selectRole.bind(this)}>
+                {/* <TouchableWithoutFeedback onPress={this.selectRole.bind(this)}>
                   <View pointerEvents="box-only" style={{padding: 0}}>
                     <Item rounded style={styles.formItem} error={this.state.roleError}>
                       <Input placeholder="Role" autoCapitalize="none" editable={false} value={store.get('role')} />
                       <Icon type="MaterialCommunityIcons" name="account-card-details" />
                     </Item>
                   </View>
-                </TouchableWithoutFeedback>
+                </TouchableWithoutFeedback> */}
               </Form>
 
               <Button block rounded style={{ marginVertical: 4, marginBottom: 8 }} onPress={this.login.bind(this)} disabled={this.state.loggingIn}>
