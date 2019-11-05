@@ -2,7 +2,8 @@ import React from 'react'
 import Store from '../../store'
 import { Container, Header, Left, Body, Right, Button, Icon, Title, Content, Text, H3, Card, CardItem, Toast, ActionSheet } from 'native-base'
 import { Image } from 'react-native'
-import { Permissions, ImagePicker } from 'expo'
+import * as Permissions from 'expo-permissions'
+import * as ImagePicker from 'expo-image-picker'
 
 class Product extends React.Component {
   constructor (props) {

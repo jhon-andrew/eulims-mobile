@@ -11,7 +11,8 @@ const initialState = {
   user: undefined,
   servers: undefined,
   cart: [],
-  role: undefined
+  role: undefined,
+  recentScans: []
 }
 
 // Store Effects
