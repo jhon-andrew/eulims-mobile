@@ -1,7 +1,7 @@
 import { createConnectedStore } from 'undux'
 import { AsyncStorage } from 'react-native'
 
-AsyncStorage.clear() // FOR DEBUGGING PURPOSES ONLY
+// AsyncStorage.clear() // FOR DEBUGGING PURPOSES ONLY
 
 // Initial State
 const initialState = {
