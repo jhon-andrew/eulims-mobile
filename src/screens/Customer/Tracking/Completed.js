@@ -17,7 +17,11 @@ class Completed  extends React.Component {
 		const api = new API(store)
 		try {
 			mycustcomRequest = await api.getComRequests()
-			this.setState({ mycustcomRequest })
+      if (!mycustcomRequest.success) {
+        console.log('No request found.')
+      } else {
+        this.setState({ mycustcomRequest })
+      }
 		} catch (err) {
 			console.log(err)
 		}
@@ -38,6 +42,7 @@ class Completed  extends React.Component {
 					<Body>
 						<Title style={{textAlign: 'center'}}>Completed Requests</Title>
 					</Body>
+          <Right />
 				</Header>
 				<Content>
 					<List>

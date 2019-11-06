@@ -17,7 +17,11 @@ class Index  extends React.Component {
 		const api = new API(store)
 		try {
 			mycustonRequest = await api.getOnRequests()
-			this.setState({ mycustonRequest })
+      if (!mycustonRequest.success) {
+        console.log('No request found.')
+      } else {
+        this.setState({ mycustonRequest })
+      }
 		} catch (err) {
 			console.log(err)
 		}
@@ -37,6 +41,7 @@ class Index  extends React.Component {
 					<Body>
 						<Title style={{textAlign: 'center'}}>Ongoing Requests</Title>
 					</Body>
+          <Right />
 				</Header>
 				<Content>
 					<List>

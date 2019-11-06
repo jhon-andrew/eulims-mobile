@@ -141,7 +141,7 @@ class Bookingform extends React.Component {
                 <Picker
                   mode="dropdown"
                   iosIcon={<Icon name="arrow-down" />}
-                  style={{ width: undefined }}
+                  style={{ width: 300 }}
                   placeholder="Laboratory"
                   placeholderStyle={{ color: "#bfc6ea" }}
                   placeholderIconColor="#007aff"

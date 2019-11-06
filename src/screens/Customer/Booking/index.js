@@ -1,16 +1,18 @@
 import React from 'react'
 import Store from '../../../store'
+import { SplashScreen } from 'expo'
 import { StyleSheet } from 'react-native'
 import { Container, Content, Header, Body, Left, Button, Text, Icon, Title, List, ListItem, Right, Form, Item, Input, Badge, Row} from 'native-base'
 import API from '../../../api'
 
 class Index extends React.Component {
 	constructor(props) {
-	  super(props)
+    super(props)
 	  this.state = {
 	  	mybookings: [],
 	  	search: undefined
-	  }
+    }
+    SplashScreen.hide()
 	}
 
 	async componentDidMount () {
