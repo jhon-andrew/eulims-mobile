@@ -81,6 +81,13 @@ class RecentScans extends React.Component {
         </Header>
         <Content>
           <List>
+            { store.get('recentScans').length === 0 ? (
+              <ListItem>
+                <Body>
+                  <Text note style={{ textAlign: 'center' }}>You haven't scanned any tags yet.</Text>
+                </Body>
+              </ListItem>
+            ) : null }
             <FlatList
               initialNumToRender={10}
               maxToRenderPerBatch={15}

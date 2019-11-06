@@ -47,7 +47,7 @@ class Tagging extends React.Component {
           </Left>
           <Body>
             <Title>Tagging</Title>
-            <Subtitle>{params.name}</Subtitle>
+            <Subtitle>{params.testname}</Subtitle>
           </Body>
           <Right />
         </Header>

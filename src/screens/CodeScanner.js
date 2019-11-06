@@ -3,7 +3,7 @@ import Store from '../store'
 import * as Permissions from 'expo-permissions'
 import { Camera } from 'expo-camera'
 import { Dimensions, StyleSheet, Platform, Vibration } from 'react-native'
-import { Container, Header, Left, Button, Icon, Body, Title, Subtitle, Grid, Row, Col, Right, Spinner, Text } from 'native-base'
+import { Container, Header, Left, Button, Icon, Body, Title, Subtitle, Grid, Row, Col, Right, Spinner, Text, Toast } from 'native-base'
 import API from '../api';
 
 const frameOffset = 80
@@ -78,13 +78,23 @@ class CodeScanner extends React.Component {
     switch (navigation.getParam('tagType')) {
       case 'Sample Tag':
         const analysis = await api.getAnalysis(data)
-        this.addToRecentScans('analysis', analysis)
-        navigation.navigate('analysis', analysis)
+        if (!analysis.sampleCode) {
+          Toast.show({ text: `Sample code doesn't exist.` })
+          navigation.pop()
+        } else {
+          this.addToRecentScans('analysis', analysis)
+          navigation.navigate('analysis', analysis)
+        }
         break
       case 'Product Code':
         const product = await api.getProduct(data)
-        this.addToRecentScans('product', product)
-        navigation.navigate(product.producttype_id === 1 ? 'entries' : 'schedule', product)
+        if (!product.product_code) {
+          Toast.show({ text: `Product code doesn't exist.` })
+          navigation.pop()
+        } else {
+          this.addToRecentScans('product', product)
+          navigation.navigate(product.producttype_id === 1 ? 'entries' : 'schedule', product)
+        }
         break
       default:
         alert('Unknown `tagType`.')
