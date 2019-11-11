@@ -85,7 +85,7 @@ export default (variables /*: * */ = variable) => {
   const buttonTheme = {
     ".disabled": {
       ".transparent": {
-        backgroundColor: null,
+        backgroundColor: "transparent",
         "NativeBase.Text": {
           color: variables.btnDisabledBg
         },
