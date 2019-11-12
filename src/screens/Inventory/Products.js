@@ -34,13 +34,13 @@ class Products extends React.Component {
 
     return (
       <Row style={{ padding: 8 }} onPress={() => navigation.navigate('product', product)}>
-        <Col style={{ width: '16%' }}>
+        {/* <Col style={{ width: '16%' }}>
           { !product.Image1 ? (
             <Thumbnail square source={require('../../../assets/no-image.png')} />
           ) : (
             <Thumbnail square source={{ uri: `${store.get('prefProtocol')}://${store.get('prefServer')}/${product.Image1}` }} />
           ) }
-        </Col>
+        </Col> */}
         <Col style={{ paddingLeft: 8 }}>
           <Text>{ product.product_code.trim() }</Text>
           <Text note>{ product.product_name.trim() }</Text>
