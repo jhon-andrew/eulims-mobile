@@ -12,8 +12,13 @@ export default class API {
   }
 
   get axios () {
+    let controllers = {
+      'Analyst': 'restapi',
+      'Customer': 'restcustomer',
+      'Top Management': 'restapi'
+    }
     let config = {
-      baseURL: `${this.protocol}//${this.server}/api`,
+      baseURL: `${this.protocol}//${this.server}/api/${controllers[this.role]}`,
       responseType: 'json'
     }
 
@@ -27,14 +32,9 @@ export default class API {
   }
 
   get (endpoint, params = {}) {
-    let controller = {
-      'Analyst': 'restapi',
-      'Customer': 'restcustomer',
-      'Top Management': 'restapi'
-    }
-    console.log('[GET]:', `${this.protocol}//${this.server}/api/${controller[this.role]}${endpoint}`)
+    console.log('[GET]:', endpoint)
     console.log('[PAYLOAD]:', params)
-    return this.axios.get(controller[this.role] + endpoint, { params })
+    return this.axios.get(endpoint, { params })
     .then(({ data }) => {
       if (!data) console.log('[ERROR]:', data)
       else console.log('[RESP]:', data)
@@ -44,14 +44,9 @@ export default class API {
   }
 
   post (endpoint, data) {
-    let controller = {
-      'Analyst': 'restapi',
-      'Customer': 'restcustomer',
-      'Top Management': 'restapi'
-    }
-    console.log('[POST]:', `${this.protocol}//${this.server}/api/${controller[this.role]}${endpoint}`)
+    console.log('[POST]:', endpoint)
     console.log('[PAYLOAD]:', data)
-    return this.axios.post(controller[this.role] + endpoint, data)
+    return this.axios.post(endpoint, data)
     .then(({ data }) => {
       if (!data) console.log('[ERROR]:', data)
       else console.log('[RESP]:', data)
@@ -62,12 +57,7 @@ export default class API {
 
   // Check Server
   checkServer (server) {
-    let controller = {
-      'Analyst': 'restapi',
-      'Customer': 'restcustomer',
-      'Top Management': 'restapi'
-    }
-    return axios.get(`${this.protocol}//${server}/api/${controller[this.role]}/server`)
+    return this.axios.get('/server')
     .then(({ data }) => {
       if (!data) console.log('Check Server ERROR:', data)
       return data
@@ -142,4 +132,29 @@ export default class API {
 
   //post booking
   setBooking = ({lab ,date, qty, desc, userid}) => this.post('/setbooking',{lab ,date, qty, desc, userid})
+
+  // Product Image Upload
+  uploadProductImage = (product, { type, uri }, progress) => {
+    if (type === 'image') {
+      const filetype = uri.split('.').pop()
+      const formData = new FormData()
+
+      formData.append('product_id', product.product_id)
+      formData.append('image', {
+        uri,
+        name: `${product.product_code}.${filetype}`,
+        type: `image/${filetype}`
+      })
+
+      return this.axios.post('/updatethumbnail', formData, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          'content-type': 'multipart/form-data'
+        },
+        onUploadProgress: progress
+      })
+    }
+
+    return false
+  }
 }
