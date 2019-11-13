@@ -107,16 +107,6 @@ class ServerSelection extends React.Component {
             </ListItem>
           </List>
         </Content>
-        {/* <Footer style={{backgroundColor: 'transparent', margin: 8}}>
-          <Form style={{flex: 1, marginRight: 8}}>
-            <Item rounded style={{paddingHorizontal: 8}}>
-              <Input placeholder="Custom Server" autoCapitalize="none" value={this.state.customServer} onChangeText={customServer => this.setState({ customServer })} />
-            </Item>
-          </Form>
-          <Button icon rounded style={{marginTop: 2}} onPress={() => this.addServer()} disabled={!this.state.customServer}>
-            <Icon type="MaterialCommunityIcons" name="plus" />
-          </Button>
-        </Footer> */}
       </Container>
     )
   }

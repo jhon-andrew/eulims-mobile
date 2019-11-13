@@ -5,9 +5,7 @@
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
-    "ios": "expo start --ios",
-    "eject": "expo eject",
-    "api-simulator": "node src/api/simulator.js"
+    "ios": "expo start --ios"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -28,10 +26,7 @@
   },
   "devDependencies": {
     "babel-preset-expo": "^7.0.0",
-    "body-parser": "^1.18.3",
-    "expo-module-scripts": "^1.1.1",
-    "express": "^4.16.4",
-    "faker": "^4.1.0"
+    "expo-module-scripts": "^1.1.1"
   },
   "private": true,
   "author": {
