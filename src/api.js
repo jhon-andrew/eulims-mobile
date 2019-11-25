@@ -1,6 +1,12 @@
 import { Toast } from 'native-base'
 import axios from 'axios'
 
+let toJSONLocal = date => {
+  let local = new Date(date)
+  local.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+  return local.toJSON().slice(0, 10)
+}
+
 // API Toolkit
 export default class API {
   constructor (store) {
@@ -80,6 +86,12 @@ export default class API {
   // Get Analysis
   getAnalysis = (id) => this.get('/analysis', { id })
 
+  // Start Analysis
+  startAnalysis = (id, date) => this.get('/startanalysis', { id, date: toJSONLocal(date) })
+
+  // Complete Analysis
+  completedAnalysis = (id, date) => this.get('/completedanalysis', { id, date: toJSONLocal(date) })
+
   // Get Products
   getProducts = () => this.get('/getproducts')
 
@@ -115,12 +127,6 @@ export default class API {
 
   // Save Schedule
   saveSchedule ({ servicetype_id /* 1: calibration, 2: maintenance, 3: usage */, startdate /* format: YYYY-MM-DD */, enddate /* format: YYYY-MM-DD */, product_id }) {
-    let toJSONLocal = date => {
-      let local = new Date(date)
-      local.setMinutes(date.getMinutes() - date.getTimezoneOffset())
-      return local.toJSON().slice(0, 10)
-    }
-
     startdate = toJSONLocal(startdate)
     enddate = toJSONLocal(enddate)
 

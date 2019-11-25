@@ -60,7 +60,7 @@ class Boot extends React.Component {
         }
 
         return navigation.navigate(proceedTo)
-      } else return navigation.navigate('login', { message: user.message })
+      } else return navigation.navigate('login', { message: 'Session has expired.' })
     } else return navigation.navigate('login', { message: 'Server is offline.' })
   }
 

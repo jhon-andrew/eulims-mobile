@@ -17,59 +17,20 @@ class Analysis extends React.Component {
     // TEMPORARY: To simulate status of each test in a sample
     let sample = props.navigation.state.params
     sample.tests = sample.tests.map(test => {
-      test.status = 'Pending'
+      test.tagging = sample.tagging.find(tag => tag.analysis_id === test.analysis_id)
       return test
     })
 
     this.state = { sample }
   }
 
-  openTagging (test, index) {
-    // const { navigation } = this.props
-    // test.procedures = [
-    //   {
-    //     procedure: 'Oxidation',
-    //     startDate: '2019-04-29',
-    //     endDate: '2019-04-29',
-    //     status: 'pending'
-    //   },
-    //   {
-    //     procedure: 'Diffusion',
-    //     startDate: '2019-04-29',
-    //     endDate: '2019-04-29',
-    //     status: 'pending'
-    //   },
-    //   {
-    //     procedure: 'Heat',
-    //     startDate: '2019-04-29',
-    //     endDate: '2019-04-29',
-    //     status: 'pending'
-    //   },
-    //   {
-    //     procedure: 'Drier',
-    //     startDate: '2019-04-29',
-    //     endDate: '2019-04-29',
-    //     status: 'pending'
-    //   }
-    // ]
-    // navigation.navigate('tagging', test)
-
-    // TEMPORARY: Since workflows are disabled, changing of status is directly under the analysis.
-    let buttons = ['Pending', 'On-going', 'Done', 'Cancel']
-    ActionSheet.show(
-      {
-        title: 'Change Status',
-        options: buttons,
-        cancelButtonIndex: buttons.indexOf('Cancel')
-      },
-      buttonIndex => {
-        if (buttonIndex !== buttons.indexOf('Cancel')) {
-          let sample = this.state.sample
-          sample.tests[index].status = buttons[buttonIndex]
-          this.setState({ sample })
-        }
-      }
-    )
+  openTagging (test) {
+    test.sampleCode = this.state.sample.sampleCode
+    if (test.tagging && test.tagging.tagging_status_id === 2) {
+      alert('This analysis is already done.')
+    } else {
+      this.props.navigation.navigate('tagging', test)
+    }
   }
 
   render () {
@@ -104,7 +65,7 @@ class Analysis extends React.Component {
               <ListItem key={index}> */ }
               <ListItem>
                 <Body>
-                  <Text>{sample.samples.name}</Text>
+                  <Text>{sample.samples.samplename}</Text>
                   <Text note>{sample.samples.description}</Text>
                 </Body>
               </ListItem>
@@ -115,14 +76,22 @@ class Analysis extends React.Component {
             </ListItem>
             {/* Analysis */}
             {sample.tests.map((test, index) => (
-              <ListItem key={index} onPress={() => this.openTagging(test, index)}>
+              <ListItem key={index} onPress={this.openTagging.bind(this, test)}>
                 <Body>
                   <Text>{test.testname}</Text>
                   <Text note>{test.method}</Text>
+                  { test.tagging && test.tagging.tagging_status_id === 1 ? (
+                    <Text note>Started: {test.tagging.start_date}</Text>
+                  ) : null }
+                  { test.tagging && test.tagging.tagging_status_id === 2 ? (
+                    <Text note>Completed: {test.tagging.start_date}</Text>
+                  ) : null }
                 </Body>
                 <Right>
-                  <Badge primary={test.status === 'On-going'} success={test.status === 'Done'}>
-                    <Text style={{ color: test.status !== 'Pending' ? '#ffffff' : 'grey' }}>{test.status.toUpperCase()}</Text>
+                  <Badge primary={test.tagging && test.tagging.tagging_status_id === 1} success={test.tagging && test.tagging.tagging_status_id === 2}>
+                    <Text style={{ color: !test.tagging || test.tagging.tagging_status_id === 0 ? 'grey' : '#ffffff' }}>
+                      {test.tagging ? ['PENDING', 'ON-GOING', 'DONE'][test.tagging.tagging_status_id] : 'PENDING'}
+                    </Text>
                   </Badge>
                 </Right>
               </ListItem>

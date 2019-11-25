@@ -3,6 +3,7 @@ import Store from '../store'
 import { SplashScreen } from 'expo'
 import { Container, Header, Body, Title, Content, Left, Button, Icon, Right, List, ListItem, Text, ActionSheet, Badge } from 'native-base'
 import { FlatList } from 'react-native'
+import API from '../api'
 
 class RecentScans extends React.Component {
   componentDidMount () {
@@ -30,11 +31,24 @@ class RecentScans extends React.Component {
     return index.toString()
   }
 
+  async goTo (type, data) {
+    const { navigation, store } = this.props
+    const api = new API(store)
+
+    if (type === 'analysis') {
+      const analysis = await api.getAnalysis(data.sampleCode)
+      navigation.navigate('analysis', analysis)
+    } else {
+      const product = await api.getProduct(data.product_code)
+      navigation.navigate(item.data.producttype_id === 1 ? 'entries' : 'schedule', product)
+    }
+  }
+
   renderRecentScansList ({ item: scanned }) {
-    const { store, navigation } = this.props
+    const { navigation } = this.props
     
     return scanned.type === 'analysis' ? (
-      <ListItem onPress={() => navigation.navigate('analysis', scanned.data)}>
+      <ListItem onPress={this.goTo.bind(this, 'analysis', scanned.data)}>
         <Body>
           <Text>{scanned.data.sampleCode}</Text>
           {/* <Text note>Status: Pending (0/4)</Text> */}
@@ -46,7 +60,7 @@ class RecentScans extends React.Component {
         </Right>
       </ListItem>
     ) : (
-      <ListItem onPress={() => navigation.navigate(scanned.data.producttype_id === 1 ? 'entries' : 'schedule', scanned.data)}>
+      <ListItem onPress={this.goTo.bind(this, 'product', scanned.data)}>
         <Body>
           <Text>{scanned.data.product_code}</Text>
           {/* <Text note>Status: Pending (0/4)</Text> */}
