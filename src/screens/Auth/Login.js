@@ -1,10 +1,14 @@
 import React from 'react'
 import Store from '../../store'
-import { SplashScreen, LinearGradient, Constants } from 'expo'
+import { SplashScreen } from 'expo'
+import Constants from 'expo-constants'
+import { LinearGradient } from 'expo-linear-gradient'
 import { StyleSheet, Dimensions, Keyboard, Image, TouchableWithoutFeedback } from 'react-native'
-import { Container, Content, View, H2, Text, Form, Item, Input, Icon, Button, Toast, Spinner } from 'native-base'
+import { Container, Content, View, H2, Text, Form, Item, Input, Icon, Button, Toast, Spinner, ActionSheet } from 'native-base'
 import theme from '../../../native-base-theme/variables/eulims'
 import API from '../../api'
+
+const appPackage = require('../../../package.json')
 
 const styles = StyleSheet.create({
   verticallyCentered: {
@@ -75,6 +79,9 @@ class LoginScreen extends React.Component {
         duration: 3000
       })
     }
+
+    // TEMPORARY. As other roles are not yet polished.
+    // store.set('role')('Analyst')
   }
 
   componentWillUnmount () {
@@ -89,6 +96,23 @@ class LoginScreen extends React.Component {
     })
   }
 
+  selectRole () {
+    // const roles = ['Customer', 'Analyst', 'Top Management', 'Cancel']
+    const roles = ['Customer', 'Analyst', 'Cancel']
+    ActionSheet.show(
+      {
+        title: 'Please choose a role to login',
+        options: roles,
+        cancelButtonIndex: roles.indexOf('Cancel')
+      },
+      role => {
+        if (role !== roles.indexOf('Cancel')) {
+          this.props.store.set('role')(roles[role])
+        }
+      }
+    )
+  }
+
   async login () {
     const { email, password } = this.state
     const { store, navigation } = this.props
@@ -96,28 +120,50 @@ class LoginScreen extends React.Component {
     this.setState({
       emailError: !email,
       passwordError: !password,
-      prefServerError: !store.get('prefServer')
+      prefServerError: !store.get('prefServer'),
+      roleError: !store.get('role')
     })
 
-    if (!email || !password || !store.get('prefServer')) return false
+    if (!email || !password || !store.get('prefServer') || !store.get('role')) return false
 
     this.setState({ loggingIn: true })
     const api = new API(store)
     const login = await api.login(email, password)
 
     if (login && login.token) {
+      // Emulate top-management login
+      // login.user.type = 'top-management'
+
       store.set('token')(login.token)
       store.set('user')(login.user)
-      return navigation.navigate('app')
-    } else if (login && login.error) {
+
+      let proceedTo = null
+      switch (login.user.type) {
+        case 'customer':
+          proceedTo = 'customer'
+          break
+        case 'top-management':
+          proceedTo = 'topManagement'
+          break
+        default:
+          proceedTo = 'app'
+          break
+      }
+
+      return navigation.navigate(proceedTo)
+    } else if (login && !login.success) {
       Toast.show({
         text: login.message,
         buttonText: 'Okay',
         duration: 3000
       })
+
+      if (login.activated === false) {
+        return navigation.navigate('customerRegistration')
+      }
     }
 
-    this.setState({ loggingIn: false   })
+    this.setState({ loggingIn: false })
   }
 
   render () {
@@ -149,13 +195,25 @@ class LoginScreen extends React.Component {
                     </Item>
                   </View>
                 </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={this.selectRole.bind(this)}>
+                  <View pointerEvents="box-only" style={{padding: 0}}>
+                    <Item rounded style={styles.formItem} error={this.state.roleError}>
+                      <Input placeholder="Role" autoCapitalize="none" editable={false} value={store.get('role')} />
+                      <Icon type="MaterialCommunityIcons" name="account-card-details" />
+                    </Item>
+                  </View>
+                </TouchableWithoutFeedback>
               </Form>
 
-              <Button block rounded style={{ marginVertical: 4 }} onPress={this.login.bind(this)} disabled={this.state.loggingIn}>
+              <Button block rounded style={{ marginVertical: 4, marginBottom: 8 }} onPress={this.login.bind(this)} disabled={this.state.loggingIn}>
                 { this.state.loggingIn ? (<Spinner color="#ffffff" />) : (<Text>Login</Text>) }
               </Button>
 
-              <Text style={styles.footer}>EULIMS Mobile v1.1 Beta</Text>
+              {/* <Button rounded outline block style={{ backgroundColor: '#57b1e5' }} onPress={() => navigation.navigate('customerRegistration')}>
+                <Text>Create a Customer Account</Text>
+              </Button> */}
+
+              <Text style={styles.footer}>EULIMS Mobile v{appPackage.version}</Text>
             </View>
           </Content>
         </LinearGradient>

@@ -4,6 +4,7 @@ import { Alert } from 'react-native'
 import { Container, Header, Left, Button, Icon, Body, Title, Content, List, ListItem, Text, Right, Spinner, Input, Form, Item, Label, View, Footer } from 'native-base'
 import theme from '../../../native-base-theme/variables/eulims'
 import { CheckServer } from '../../api'
+import { TouchableHighlight } from 'react-native-gesture-handler'
 
 class ServerSelection extends React.Component {
   constructor (props) {
@@ -87,25 +88,25 @@ class ServerSelection extends React.Component {
                     <Text note>{server.address}</Text>
                   </Body>
                   <Right>
-                    <Button small rounded danger icon onPress={this.removeServer.bind(this, index, server.name)}>
+                    <Button small rounded danger icon disabled={index < 2} onPress={this.removeServer.bind(this, index, server.name)}>
                       <Icon type="MaterialCommunityIcons" name="delete-forever" />
                     </Button>
                   </Right>
                 </ListItem>
               ))
             }
+            <ListItem>
+              <Form style={{flex: 1, marginLeft: 8}}>
+                <Item rounded style={{paddingHorizontal: 8}}>
+                  <Input placeholder="Custom Server" autoCapitalize="none" value={this.state.customServer} onChangeText={customServer => this.setState({ customServer })} />
+                  <Button transparent icon rounded style={{marginTop: 2}} onPress={() => this.addServer()} disabled={!this.state.customServer}>
+                    <Icon type="MaterialCommunityIcons" name="plus" />
+                  </Button>
+                </Item>
+              </Form>
+            </ListItem>
           </List>
         </Content>
-        <Footer style={{backgroundColor: 'transparent', margin: 8}}>
-          <Form style={{flex: 1, marginRight: 8}}>
-            <Item rounded style={{paddingHorizontal: 8}}>
-              <Input placeholder="Custom Server" autoCapitalize="none" value={this.state.customServer} onChangeText={customServer => this.setState({ customServer })} />
-            </Item>
-          </Form>
-          <Button icon rounded style={{marginTop: 2}} onPress={() => this.addServer()} disabled={!this.state.customServer}>
-            <Icon type="MaterialCommunityIcons" name="plus" />
-          </Button>
-        </Footer>
       </Container>
     )
   }

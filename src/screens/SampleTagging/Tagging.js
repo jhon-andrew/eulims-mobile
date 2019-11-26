@@ -1,7 +1,8 @@
 import React from 'react'
 import Store from '../../store'
-import { Container, Header, Left, Button, Icon, Body, Title, Subtitle, Right, Content, H3, List, ListItem, Text, Badge, ActionSheet } from 'native-base'
+import { Container, Header, Left, Button, Icon, Body, Title, Subtitle, Right, Content, H3, List, ListItem, Text, Badge, ActionSheet, DatePicker, Card, CardItem, Toast } from 'native-base'
 import { StyleSheet } from 'react-native'
+import API from '../../api'
 
 const styles = StyleSheet.create({
   sampleMethod: {
@@ -16,21 +17,27 @@ const styles = StyleSheet.create({
 class Tagging extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {}
+    this.state = {
+      date: new Date()
+    }
   }
 
-  changeStatus (index, procedure) {
-    let buttons = ['Pending', 'On-going', 'Completed', 'Cancel']
-    ActionSheet.show(
-      {
-        title: 'Change Status',
-        options: buttons,
-        cancelButtonIndex: 3
-      },
-      buttonIndex => {
-        console.log(`Change status to "${buttons[buttonIndex]}".`)
-      }
-    )
+  async changeStatus () {
+    const { navigation, store } = this.props
+    const { params } = navigation.state
+    const api = new API(store)
+
+    if (!params.tagging || params.tagging.tagging_status_id === 0) {
+      await api.startAnalysis(params.tagging.analysis_id, this.state.date)
+      Toast.show({ text: 'Analysis has started.' })
+    } else if (params.tagging.tagging_status_id === 1) {
+      await api.completedAnalysis(params.tagging.analysis_id, this.state.date)
+      Toast.show({ text: 'Analysis has been completed.' })
+    }
+
+    const analysis = await api.getAnalysis(params.sampleCode)
+    navigation.pop(2)
+    navigation.navigate('analysis', analysis)
   }
 
   render () {
@@ -47,32 +54,37 @@ class Tagging extends React.Component {
           </Left>
           <Body>
             <Title>Tagging</Title>
-            <Subtitle>{params.name}</Subtitle>
+            <Subtitle>{params.testname}</Subtitle>
           </Body>
           <Right />
         </Header>
         <Content padder>
           <H3 style={styles.sampleMethod}>{params.method}</H3>
-          <List>
-            <ListItem itemHeader style={styles.listHeader}>
-              <Text>Procedures</Text>
-            </ListItem>
-
-            {/* Procedures */}
-            {params.procedures.map((procedure, index) => (
-              <ListItem key={index} onPress={() => this.changeStatus(index, procedure)}>
-                <Body>
-                  <Text>{procedure.procedure}</Text>
-                  <Text note>{procedure.startDate} - {procedure.endDate}</Text>
-                </Body>
-                <Right>
-                  <Badge>
-                    <Text>{procedure.status.toUpperCase()}</Text>
-                  </Badge>
-                </Right>
-              </ListItem>
-            ))}
-          </List>
+          <Card style={{ marginTop: 16, marginBottom: 16 }}>
+            <CardItem>
+              <Left>
+              { !params.tagging || params.tagging.tagging_status_id === 0 ? (
+                <Text>Date started:</Text>
+              ) : (
+                <Text>Date completed:</Text>
+              )}
+              </Left>
+              <Body>
+                <DatePicker
+                  defaultDate={new Date()}
+                  onDateChange={date => this.setState({ date })}
+                />
+              </Body>
+              <Right />
+            </CardItem>
+          </Card>
+          <Button block onPress={this.changeStatus.bind(this)}>
+            { !params.tagging || params.tagging.tagging_status_id === 0 ? (
+              <Text>Start Analysis</Text>
+            ) : (
+              <Text>Complete Analysis</Text>
+            )}
+          </Button>
         </Content>
       </Container>
     )

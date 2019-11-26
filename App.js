@@ -1,5 +1,5 @@
 import React from 'react'
-import { Font } from 'expo'
+import * as Font from 'expo-font'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { setCustomText, setCustomTextInput } from 'react-native-global-props'
 import getTheme from './native-base-theme/components'

@@ -17,26 +17,65 @@ const styles = StyleSheet.create({
 class DrawerContent extends React.Component {
   constructor (props) {
     super(props)
+    const user = this.props.store.get('user')
+
+    let drawerRoutes = []
+    switch (user.type) {
+      case 'customer':
+        drawerRoutes = [
+          // Customer Routes
+          {
+            label: 'Booking',
+            screens: ['booking', 'booking_form'],
+            defaultScreen: 'booking'
+          },
+          {
+            label: 'Tracking',
+            screens: ['tracking'],
+            defaultScreen: 'tracking'
+          },
+          {
+            label: 'Wallet',
+            screens: ['wallet'],
+            defaultScreen: 'wallet'
+          }
+        ]
+        break
+      case 'top-management':
+        drawerRoutes = [
+          // Top Management Routes
+          {
+            label: 'For Signatory',
+            screens: ['documents', 'document'],
+            defaultScreen: 'forSignatory'
+          }
+        ]
+        break
+      default:
+        drawerRoutes = [
+          // Analyst Routes
+          {
+            label: 'Recent Scans',
+            screens: ['recentScans'],
+            defaultScreen: 'recentScans'
+          },
+          {
+            label: 'Analysis',
+            screens: ['search', 'analysis', 'tagging'],
+            defaultScreen: 'search'
+          },
+          {
+            label: 'Products',
+            screens: ['products'],
+            defaultScreen: 'products'
+          }
+        ]
+        break
+    }
+
     this.state = {
       selectedRoute: 0,
-      // Nav Drawer Routes
-      routes: [
-        {
-          label: 'Recent Scans',
-          screens: ['recentScans'],
-          defaultScreen: 'recentScans'
-        },
-        {
-          label: 'Analysis',
-          screens: ['search', 'analysis', 'tagging'],
-          defaultScreen: 'search'
-        },
-        {
-          label: 'Products',
-          screens: ['products'],
-          defaultScreen: 'products'
-        }
-      ],
+      routes: drawerRoutes,
       loggingOut: false
     }
   }

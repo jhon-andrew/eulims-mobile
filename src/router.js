@@ -7,6 +7,8 @@ import RecentScans from './screens/RecentScans'
 import DrawerContent from './screens/DrawerContent'
 import sampleTaggingRouter from './screens/SampleTagging/router'
 import inventoryRouter from './screens/Inventory/router'
+import customerRouter from './screens/Customer/router'
+import topManagement from './screens/PKI/router'
 
 const rootNav = createSwitchNavigator({
   boot: Boot,
@@ -18,7 +20,9 @@ const rootNav = createSwitchNavigator({
         {
           recentScans: RecentScans,
           sampleTagging: sampleTaggingRouter,
-          inventory: inventoryRouter
+          inventory: inventoryRouter,
+          customer: customerRouter,
+          topManagement: topManagement
         },
         { // `screens` route config
           contentComponent: DrawerContent

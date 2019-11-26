@@ -1,8 +1,9 @@
 import React from 'react'
 import Store from '../store'
-import { Permissions, Camera } from 'expo'
+import * as Permissions from 'expo-permissions'
+import { Camera } from 'expo-camera'
 import { Dimensions, StyleSheet, Platform, Vibration } from 'react-native'
-import { Container, Header, Left, Button, Icon, Body, Title, Subtitle, Grid, Row, Col, Right, Spinner, Text } from 'native-base'
+import { Container, Header, Left, Button, Icon, Body, Title, Subtitle, Grid, Row, Col, Right, Spinner, Text, Toast } from 'native-base'
 import API from '../api';
 
 const frameOffset = 80
@@ -31,17 +32,35 @@ class CodeScanner extends React.Component {
     this.state = {
       cameraRatio: '16:9',
       gettingAnalysis: false,
-      scannedData: undefined 
+      scannedData: undefined,
+      hasCameraPermission: false
     }
   }
 
   async componentDidMount () {
-    await Permissions.askAsync(Permissions.CAMERA)
+    const { status } = await Permissions.askAsync(Permissions.CAMERA)
+    this.setState({ hasCameraPermission: status === 'granted' })
 
     if (Platform.OS === 'android' && this.camera) {
-      const ratios = await this.camera.getSupportedRatiosAsync()
-      this.setState({ cameraRatio: ratios[ratios.length - 1] })
+      this.camera.getSupportedRatiosAsync().then(ratios => {
+        this.setState({ cameraRatio: ratios[ratios.length - 1] })
+      }).catch(err => {})
     }
+  }
+
+  addToRecentScans (type, data) {
+    const { store } = this.props
+    const recentScans = store.get('recentScans')
+    const duplicate = recentScans.findIndex(scanned => {
+      if (type === 'analysis') {
+        return scanned.data.sampleCode === data.sampleCode
+      } else {
+        return scanned.data.product_code === data.product_code
+      }
+    })
+
+    if (duplicate >= 0) recentScans.splice(duplicate, 1)
+    store.set('recentScans')([{ type, data }, ...recentScans])
   }
 
   async onScan ({ type, data }) {
@@ -59,16 +78,23 @@ class CodeScanner extends React.Component {
     switch (navigation.getParam('tagType')) {
       case 'Sample Tag':
         const analysis = await api.getAnalysis(data)
-        navigation.navigate('analysis', analysis)
+        if (!analysis.sampleCode) {
+          Toast.show({ text: `Sample code doesn't exist.` })
+          navigation.pop()
+        } else {
+          this.addToRecentScans('analysis', analysis)
+          navigation.navigate('analysis', analysis)
+        }
         break
       case 'Product Code':
-        // const product = await api.getProducts(data)
-        // if (product.type === 'equipment') {
-        //   navigation.navigate('schedule', product)
-        // } else {
-        //   navigation.navigate('withdraw', product)
-        // }
-        console.log('TODO: Create a getProduct(code) API feature.')
+        const product = await api.getProduct(data)
+        if (!product.product_code) {
+          Toast.show({ text: `Product code doesn't exist.` })
+          navigation.pop()
+        } else {
+          this.addToRecentScans('product', product)
+          navigation.navigate(product.producttype_id === 1 ? 'entries' : 'schedule', product)
+        }
         break
       default:
         alert('Unknown `tagType`.')
@@ -78,9 +104,9 @@ class CodeScanner extends React.Component {
 
   render () {
     const { navigation } = this.props
-    const { gettingAnalysis, scannedData } = this.state
+    const { gettingAnalysis, scannedData, hasCameraPermission } = this.state
 
-    return (
+    return hasCameraPermission ? (
       <Camera
         style={{ flex: 1 }}
         ref={camera => (this.camera = camera)}
@@ -117,7 +143,7 @@ class CodeScanner extends React.Component {
           </Grid>
         </Container>
       </Camera>
-    )
+    ) : null
   }
 }
 

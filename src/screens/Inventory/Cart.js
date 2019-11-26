@@ -50,7 +50,7 @@ class Cart extends React.Component {
     const entries = store.get('cart')
     let totalAmount = 0
 
-    entries.forEach(entry => (totalAmount += (entry.price * entry.quantity)))
+    entries.forEach(entry => (totalAmount += (entry.amount * entry.quantity)))
 
     Alert.alert(
       'Please confirm',
@@ -112,16 +112,16 @@ class Cart extends React.Component {
               <ListItem key={index}>
                 <Body>
                   <Text note>Expiration Date</Text>
-                  <Text>{ entry.expiration }</Text>
+                  <Text>{ entry.expiration_date }</Text>
 
-                  <Text note>{"\n"}Supplier</Text>
-                  <Text>{ entry.supplier }</Text>
+                  {/* <Text note>{"\n"}Supplier</Text>
+                  <Text>{ entry.supplier }</Text> */}
 
                   <Text note>{"\n"}Content</Text>
                   <Text>{ entry.content }</Text>
 
                   <Text note>{"\n"}Price</Text>
-                  <Text>{ entry.price }</Text>
+                  <Text>{ entry.amount }</Text>
                 </Body>
                 <Right style={styles.listRight}>
                   <Button small danger icon style={styles.deleteButton} onPress={this.removeEntry.bind(this, index, entry.supplier)}>
@@ -132,7 +132,7 @@ class Cart extends React.Component {
                   <Text>{ entry.quantity }</Text>
 
                   <Text note>{"\n"}Total Price</Text>
-                  <Text>{ this.formatAmount(entry.price * entry.quantity) }</Text>
+                  <Text>{ this.formatAmount(parseInt(entry.amount) * entry.quantity) }</Text>
                 </Right>
               </ListItem>
             )) }

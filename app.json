@@ -2,8 +2,10 @@
   "expo": {
     "name": "EULIMS",
     "slug": "eulims-mobile",
-    "privacy": "public",
-    "sdkVersion": "32.0.0",
+    "description": "The mobile app companion of the Enhanced Unified Laboratory Information Management System (EULIMS) web portal.",
+    "githubUrl": "https://github.com/jhon-andrew/eulims-mobile/tree/development",
+    "privacy": "unlisted",
+    "sdkVersion": "35.0.0",
     "platforms": [
       "ios",
       "android"

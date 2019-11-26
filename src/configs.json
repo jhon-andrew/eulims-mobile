@@ -1,16 +1,12 @@
 {
   "servers": [
     {
+      "name": "Customers",
+      "address": "ulimsportal.onelab.ph"
+    },
+    {
       "name": "Local",
-      "address": "localhost:8080"
-    },
-    {
-      "name": "Development",
-      "address": "webapp:8080"
-    },
-    {
-      "name": "Production",
-      "address": "eulimsportal.onelab.ph"
+      "address": "www.eulims.local"
     }
   ]
 }

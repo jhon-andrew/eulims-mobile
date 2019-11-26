@@ -16,10 +16,12 @@ const styles = StyleSheet.create({
 class Schedule extends React.Component {
   constructor (props) {
     super(props)
+    const { store, navigation } = this.props
     this.state = {
-      startDate: undefined,
-      endDate: undefined,
-      serviceType: undefined
+      startdate: undefined,
+      enddate: undefined,
+      servicetype_id: undefined,
+      product_id: navigation.state.params.product_id
     }
   }
 
@@ -51,8 +53,8 @@ class Schedule extends React.Component {
             </Button>
           </Left>
           <Body>
-            <Title>{ params.code }</Title>
-            <Subtitle numberOfLines={1} ellipsizeMode="tail">{ params.name }</Subtitle>
+            <Title>{ params.product_code }</Title>
+            <Subtitle numberOfLines={1} ellipsizeMode="tail">{ params.product_name }</Subtitle>
           </Body>
           <Right />
         </Header>
@@ -63,8 +65,8 @@ class Schedule extends React.Component {
               <Label style={styles.label}>Service Type</Label>
               <Picker
                 mode="dropdown"
-                selectedValue={this.state.serviceType}
-                onValueChange={serviceType => this.setState({ serviceType })}
+                selectedValue={this.state.servicetype_id}
+                onValueChange={servicetype_id => this.setState({ servicetype_id })}
               >
                 <Picker.Item label="Calibration" value="1" />
                 <Picker.Item label="Maintenance" value="2" />
@@ -77,15 +79,15 @@ class Schedule extends React.Component {
                 style={{ alignSelf: 'stretch' }}
                 placeHolderText="Select Date"
                 minimumDate={new Date()}
-                onDateChange={startDate => this.setState({ startDate })}
+                onDateChange={startdate => this.setState({ startdate })}
               />
             </Item>
             <Item picker>
               <Label style={styles.label}>End Date</Label>
               <DatePicker
                 placeHolderText="Select Date"
-                minimumDate={this.state.startDate}
-                onDateChange={endDate => this.setState({ endDate })}
+                minimumDate={this.state.startdate}
+                onDateChange={enddate => this.setState({ enddate })}
               />
             </Item>
           </Form>
